@@ -126,6 +126,7 @@ public class TtzBillOderController {
 		if(hb_day ==null || hb_day.equals("")) {
 			 hb_day = "7";
 		}
+		System.err.println("aa");
 		double hb_day2 =Double.valueOf(hb_day);
 		hb_rate = ConfigService.selectConfig("ttz","hbdetail","hb_rate");
 		if(hb_rate ==null) {
