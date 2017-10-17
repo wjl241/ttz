@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cn.ttz.dao.Jihes_goodsDao" >
+  <resultMap id="BaseResultMap" type="com.cn.ttz.pojo.Jihes_goods" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="origin" property="origin" jdbcType="TINYINT" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="dig" property="dig" jdbcType="TINYINT" />
+    <result column="brand" property="brand" jdbcType="TINYINT" />
+    <result column="category_id" property="categoryId" jdbcType="INTEGER" />
+    <result column="sales_amount" property="salesAmount" jdbcType="INTEGER" />
+    <result column="start_time" property="startTime" jdbcType="INTEGER" />
+    <result column="end_time" property="endTime" jdbcType="INTEGER" />
+    <result column="view" property="view" jdbcType="INTEGER" />
+    <result column="isdelete" property="isdelete" jdbcType="BIT" />
+    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="market_price" property="marketPrice" jdbcType="DECIMAL" />
+    <result column="item_id" property="itemId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="cover" property="cover" jdbcType="VARCHAR" />
+    <result column="official_coupon" property="officialCoupon" jdbcType="VARCHAR" />
+    <result column="shop_coupon" property="shopCoupon" jdbcType="VARCHAR" />
+    <result column="official_coupon_price" property="officialCouponPrice" jdbcType="REAL" />
+    <result column="shop_coupon_price" property="shopCouponPrice" jdbcType="REAL" />
+    <result column="tag" property="tag" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="caption" property="caption" jdbcType="VARCHAR" />
+    <result column="web_collect_id" property="webCollectId" jdbcType="INTEGER" />
+    <result column="refresh_time" property="refreshTime" jdbcType="INTEGER" />
+    <result column="revelation_id" property="revelationId" jdbcType="INTEGER" />
+    <result column="picture_time" property="pictureTime" jdbcType="INTEGER" />
+    <result column="major_hot" property="majorHot" jdbcType="BIT" />
+    <result column="presell" property="presell" jdbcType="TINYINT" />
+    <result column="max_retio" property="maxRetio" jdbcType="REAL" />
+    <result column="min_retio" property="minRetio" jdbcType="REAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, origin, status, dig, brand, category_id, sales_amount, start_time, end_time, 
+    view, isdelete, create_time, update_time, price, market_price, item_id, name, cover, 
+    official_coupon, shop_coupon, official_coupon_price, shop_coupon_price, tag, url, 
+    caption, web_collect_id, refresh_time, revelation_id, picture_time, major_hot, presell, 
+    max_retio, min_retio
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from jihes_goods
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from jihes_goods
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.cn.ttz.pojo.Jihes_goods" >
+    insert into jihes_goods (id, origin, status, 
+      dig, brand, category_id, 
+      sales_amount, start_time, end_time, 
+      view, isdelete, create_time, 
+      update_time, price, market_price, 
+      item_id, name, cover, 
+      official_coupon, shop_coupon, official_coupon_price, 
+      shop_coupon_price, tag, url, 
+      caption, web_collect_id, refresh_time, 
+      revelation_id, picture_time, major_hot, 
+      presell, max_retio, min_retio
+      )
+    values (#{id,jdbcType=INTEGER}, #{origin,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, 
+      #{dig,jdbcType=TINYINT}, #{brand,jdbcType=TINYINT}, #{categoryId,jdbcType=INTEGER}, 
+      #{salesAmount,jdbcType=INTEGER}, #{startTime,jdbcType=INTEGER}, #{endTime,jdbcType=INTEGER}, 
+      #{view,jdbcType=INTEGER}, #{isdelete,jdbcType=BIT}, #{createTime,jdbcType=INTEGER}, 
+      #{updateTime,jdbcType=INTEGER}, #{price,jdbcType=DECIMAL}, #{marketPrice,jdbcType=DECIMAL}, 
+      #{itemId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{cover,jdbcType=VARCHAR}, 
+      #{officialCoupon,jdbcType=VARCHAR}, #{shopCoupon,jdbcType=VARCHAR}, #{officialCouponPrice,jdbcType=REAL}, 
+      #{shopCouponPrice,jdbcType=REAL}, #{tag,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, 
+      #{caption,jdbcType=VARCHAR}, #{webCollectId,jdbcType=INTEGER}, #{refreshTime,jdbcType=INTEGER}, 
+      #{revelationId,jdbcType=INTEGER}, #{pictureTime,jdbcType=INTEGER}, #{majorHot,jdbcType=BIT}, 
+      #{presell,jdbcType=TINYINT}, #{maxRetio,jdbcType=REAL}, #{minRetio,jdbcType=REAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cn.ttz.pojo.Jihes_goods" >
+    insert into jihes_goods
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="origin != null" >
+        origin,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="dig != null" >
+        dig,
+      </if>
+      <if test="brand != null" >
+        brand,
+      </if>
+      <if test="categoryId != null" >
+        category_id,
+      </if>
+      <if test="salesAmount != null" >
+        sales_amount,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="view != null" >
+        view,
+      </if>
+      <if test="isdelete != null" >
+        isdelete,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="marketPrice != null" >
+        market_price,
+      </if>
+      <if test="itemId != null" >
+        item_id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="cover != null" >
+        cover,
+      </if>
+      <if test="officialCoupon != null" >
+        official_coupon,
+      </if>
+      <if test="shopCoupon != null" >
+        shop_coupon,
+      </if>
+      <if test="officialCouponPrice != null" >
+        official_coupon_price,
+      </if>
+      <if test="shopCouponPrice != null" >
+        shop_coupon_price,
+      </if>
+      <if test="tag != null" >
+        tag,
+      </if>
+      <if test="url != null" >
+        url,
+      </if>
+      <if test="caption != null" >
+        caption,
+      </if>
+      <if test="webCollectId != null" >
+        web_collect_id,
+      </if>
+      <if test="refreshTime != null" >
+        refresh_time,
+      </if>
+      <if test="revelationId != null" >
+        revelation_id,
+      </if>
+      <if test="pictureTime != null" >
+        picture_time,
+      </if>
+      <if test="majorHot != null" >
+        major_hot,
+      </if>
+      <if test="presell != null" >
+        presell,
+      </if>
+      <if test="maxRetio != null" >
+        max_retio,
+      </if>
+      <if test="minRetio != null" >
+        min_retio,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="origin != null" >
+        #{origin,jdbcType=TINYINT},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="dig != null" >
+        #{dig,jdbcType=TINYINT},
+      </if>
+      <if test="brand != null" >
+        #{brand,jdbcType=TINYINT},
+      </if>
+      <if test="categoryId != null" >
+        #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="salesAmount != null" >
+        #{salesAmount,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=INTEGER},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=INTEGER},
+      </if>
+      <if test="view != null" >
+        #{view,jdbcType=INTEGER},
+      </if>
+      <if test="isdelete != null" >
+        #{isdelete,jdbcType=BIT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="marketPrice != null" >
+        #{marketPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="itemId != null" >
+        #{itemId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="cover != null" >
+        #{cover,jdbcType=VARCHAR},
+      </if>
+      <if test="officialCoupon != null" >
+        #{officialCoupon,jdbcType=VARCHAR},
+      </if>
+      <if test="shopCoupon != null" >
+        #{shopCoupon,jdbcType=VARCHAR},
+      </if>
+      <if test="officialCouponPrice != null" >
+        #{officialCouponPrice,jdbcType=REAL},
+      </if>
+      <if test="shopCouponPrice != null" >
+        #{shopCouponPrice,jdbcType=REAL},
+      </if>
+      <if test="tag != null" >
+        #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="caption != null" >
+        #{caption,jdbcType=VARCHAR},
+      </if>
+      <if test="webCollectId != null" >
+        #{webCollectId,jdbcType=INTEGER},
+      </if>
+      <if test="refreshTime != null" >
+        #{refreshTime,jdbcType=INTEGER},
+      </if>
+      <if test="revelationId != null" >
+        #{revelationId,jdbcType=INTEGER},
+      </if>
+      <if test="pictureTime != null" >
+        #{pictureTime,jdbcType=INTEGER},
+      </if>
+      <if test="majorHot != null" >
+        #{majorHot,jdbcType=BIT},
+      </if>
+      <if test="presell != null" >
+        #{presell,jdbcType=TINYINT},
+      </if>
+      <if test="maxRetio != null" >
+        #{maxRetio,jdbcType=REAL},
+      </if>
+      <if test="minRetio != null" >
+        #{minRetio,jdbcType=REAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cn.ttz.pojo.Jihes_goods" >
+    update jihes_goods
+    <set >
+      <if test="origin != null" >
+        origin = #{origin,jdbcType=TINYINT},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="dig != null" >
+        dig = #{dig,jdbcType=TINYINT},
+      </if>
+      <if test="brand != null" >
+        brand = #{brand,jdbcType=TINYINT},
+      </if>
+      <if test="categoryId != null" >
+        category_id = #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="salesAmount != null" >
+        sales_amount = #{salesAmount,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=INTEGER},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=INTEGER},
+      </if>
+      <if test="view != null" >
+        view = #{view,jdbcType=INTEGER},
+      </if>
+      <if test="isdelete != null" >
+        isdelete = #{isdelete,jdbcType=BIT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="marketPrice != null" >
+        market_price = #{marketPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="itemId != null" >
+        item_id = #{itemId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="cover != null" >
+        cover = #{cover,jdbcType=VARCHAR},
+      </if>
+      <if test="officialCoupon != null" >
+        official_coupon = #{officialCoupon,jdbcType=VARCHAR},
+      </if>
+      <if test="shopCoupon != null" >
+        shop_coupon = #{shopCoupon,jdbcType=VARCHAR},
+      </if>
+      <if test="officialCouponPrice != null" >
+        official_coupon_price = #{officialCouponPrice,jdbcType=REAL},
+      </if>
+      <if test="shopCouponPrice != null" >
+        shop_coupon_price = #{shopCouponPrice,jdbcType=REAL},
+      </if>
+      <if test="tag != null" >
+        tag = #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="caption != null" >
+        caption = #{caption,jdbcType=VARCHAR},
+      </if>
+      <if test="webCollectId != null" >
+        web_collect_id = #{webCollectId,jdbcType=INTEGER},
+      </if>
+      <if test="refreshTime != null" >
+        refresh_time = #{refreshTime,jdbcType=INTEGER},
+      </if>
+      <if test="revelationId != null" >
+        revelation_id = #{revelationId,jdbcType=INTEGER},
+      </if>
+      <if test="pictureTime != null" >
+        picture_time = #{pictureTime,jdbcType=INTEGER},
+      </if>
+      <if test="majorHot != null" >
+        major_hot = #{majorHot,jdbcType=BIT},
+      </if>
+      <if test="presell != null" >
+        presell = #{presell,jdbcType=TINYINT},
+      </if>
+      <if test="maxRetio != null" >
+        max_retio = #{maxRetio,jdbcType=REAL},
+      </if>
+      <if test="minRetio != null" >
+        min_retio = #{minRetio,jdbcType=REAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cn.ttz.pojo.Jihes_goods" >
+    update jihes_goods
+    set origin = #{origin,jdbcType=TINYINT},
+      status = #{status,jdbcType=TINYINT},
+      dig = #{dig,jdbcType=TINYINT},
+      brand = #{brand,jdbcType=TINYINT},
+      category_id = #{categoryId,jdbcType=INTEGER},
+      sales_amount = #{salesAmount,jdbcType=INTEGER},
+      start_time = #{startTime,jdbcType=INTEGER},
+      end_time = #{endTime,jdbcType=INTEGER},
+      view = #{view,jdbcType=INTEGER},
+      isdelete = #{isdelete,jdbcType=BIT},
+      create_time = #{createTime,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=INTEGER},
+      price = #{price,jdbcType=DECIMAL},
+      market_price = #{marketPrice,jdbcType=DECIMAL},
+      item_id = #{itemId,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      cover = #{cover,jdbcType=VARCHAR},
+      official_coupon = #{officialCoupon,jdbcType=VARCHAR},
+      shop_coupon = #{shopCoupon,jdbcType=VARCHAR},
+      official_coupon_price = #{officialCouponPrice,jdbcType=REAL},
+      shop_coupon_price = #{shopCouponPrice,jdbcType=REAL},
+      tag = #{tag,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      caption = #{caption,jdbcType=VARCHAR},
+      web_collect_id = #{webCollectId,jdbcType=INTEGER},
+      refresh_time = #{refreshTime,jdbcType=INTEGER},
+      revelation_id = #{revelationId,jdbcType=INTEGER},
+      picture_time = #{pictureTime,jdbcType=INTEGER},
+      major_hot = #{majorHot,jdbcType=BIT},
+      presell = #{presell,jdbcType=TINYINT},
+      max_retio = #{maxRetio,jdbcType=REAL},
+      min_retio = #{minRetio,jdbcType=REAL}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

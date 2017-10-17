@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cn.ttz.dao.Ttz_goodsDao" >
+  <resultMap id="BaseResultMap" type="com.cn.ttz.pojo.Ttz_goods" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="good_id" property="goodId" jdbcType="VARCHAR" />
+    <result column="start_time" property="startTime" jdbcType="INTEGER" />
+    <result column="end_time" property="endTime" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="display_order" property="displayOrder" jdbcType="INTEGER" />
+    <result column="good_name" property="goodName" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="market_price" property="marketPrice" jdbcType="DECIMAL" />
+    <result column="cover" property="cover" jdbcType="VARCHAR" />
+    <result column="shop_coupon" property="shopCoupon" jdbcType="VARCHAR" />
+    <result column="shop_coupon_price" property="shopCouponPrice" jdbcType="REAL" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="sales_amount" property="salesAmount" jdbcType="INTEGER" />
+  </resultMap>
+
+  <resultMap id="Jihes_goodsMap" type="com.cn.ttz.pojo.Jihes_goods" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="origin" property="origin" jdbcType="TINYINT" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="dig" property="dig" jdbcType="TINYINT" />
+    <result column="brand" property="brand" jdbcType="TINYINT" />
+    <result column="category_id" property="categoryId" jdbcType="INTEGER" />
+    <result column="sales_amount" property="salesAmount" jdbcType="INTEGER" />
+    <result column="start_time" property="startTime" jdbcType="INTEGER" />
+    <result column="end_time" property="endTime" jdbcType="INTEGER" />
+    <result column="view" property="view" jdbcType="INTEGER" />
+    <result column="isdelete" property="isdelete" jdbcType="BIT" />
+    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="market_price" property="marketPrice" jdbcType="DECIMAL" />
+    <result column="item_id" property="itemId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="cover" property="cover" jdbcType="VARCHAR" />
+    <result column="official_coupon" property="officialCoupon" jdbcType="VARCHAR" />
+    <result column="shop_coupon" property="shopCoupon" jdbcType="VARCHAR" />
+    <result column="official_coupon_price" property="officialCouponPrice" jdbcType="REAL" />
+    <result column="shop_coupon_price" property="shopCouponPrice" jdbcType="REAL" />
+    <result column="tag" property="tag" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="caption" property="caption" jdbcType="VARCHAR" />
+    <result column="web_collect_id" property="webCollectId" jdbcType="INTEGER" />
+    <result column="refresh_time" property="refreshTime" jdbcType="INTEGER" />
+    <result column="revelation_id" property="revelationId" jdbcType="INTEGER" />
+    <result column="picture_time" property="pictureTime" jdbcType="INTEGER" />
+    <result column="major_hot" property="majorHot" jdbcType="BIT" />
+    <result column="presell" property="presell" jdbcType="TINYINT" />
+    <result column="max_retio" property="maxRetio" jdbcType="REAL" />
+    <result column="min_retio" property="minRetio" jdbcType="REAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, good_id, start_time, end_time, create_time, update_time, status, display_order, 
+    good_name, price, market_price, cover, shop_coupon, shop_coupon_price, url, sales_amount
+  </sql>
+
+  <sql id="Jihes_List" >
+   b.id,b.origin,b.status,b.dig,b.brand,b.category_id,b.sales_amount,b.start_time,b.end_time,b.
+    view,b.isdelete,b.create_time,b.update_time,b.price,b.market_price,b.item_id,b.name,b.cover,b.
+    official_coupon,b.shop_coupon,b.official_coupon_price,b.shop_coupon_price,b.tag,b.url,b.
+    caption,b.web_collect_id,b.refresh_time,b.revelation_id,b.picture_time,b.major_hot,b.presell,b.
+    max_retio,b.min_retio
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ttz_goods
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ttz_goods
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.cn.ttz.pojo.Ttz_goods" >
+    insert into ttz_goods (id, good_id, start_time, 
+      end_time, create_time, update_time, 
+      status, display_order, good_name, 
+      price, market_price, cover, 
+      shop_coupon, shop_coupon_price, url, 
+      sales_amount)
+    values (#{id,jdbcType=INTEGER}, #{goodId,jdbcType=VARCHAR}, #{startTime,jdbcType=INTEGER}, 
+      #{endTime,jdbcType=INTEGER}, #{createTime,jdbcType=INTEGER}, #{updateTime,jdbcType=INTEGER}, 
+      #{status,jdbcType=TINYINT}, #{displayOrder,jdbcType=INTEGER}, #{goodName,jdbcType=VARCHAR}, 
+      #{price,jdbcType=DECIMAL}, #{marketPrice,jdbcType=DECIMAL}, #{cover,jdbcType=VARCHAR}, 
+      #{shopCoupon,jdbcType=VARCHAR}, #{shopCouponPrice,jdbcType=REAL}, #{url,jdbcType=VARCHAR}, 
+      #{salesAmount,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cn.ttz.pojo.Ttz_goods" >
+    insert into ttz_goods
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="goodId != null" >
+        good_id,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="displayOrder != null" >
+        display_order,
+      </if>
+      <if test="goodName != null" >
+        good_name,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="marketPrice != null" >
+        market_price,
+      </if>
+      <if test="cover != null" >
+        cover,
+      </if>
+      <if test="shopCoupon != null" >
+        shop_coupon,
+      </if>
+      <if test="shopCouponPrice != null" >
+        shop_coupon_price,
+      </if>
+      <if test="url != null" >
+        url,
+      </if>
+      <if test="salesAmount != null" >
+        sales_amount,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="goodId != null" >
+        #{goodId,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=INTEGER},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="displayOrder != null" >
+        #{displayOrder,jdbcType=INTEGER},
+      </if>
+      <if test="goodName != null" >
+        #{goodName,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="marketPrice != null" >
+        #{marketPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="cover != null" >
+        #{cover,jdbcType=VARCHAR},
+      </if>
+      <if test="shopCoupon != null" >
+        #{shopCoupon,jdbcType=VARCHAR},
+      </if>
+      <if test="shopCouponPrice != null" >
+        #{shopCouponPrice,jdbcType=REAL},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="salesAmount != null" >
+        #{salesAmount,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cn.ttz.pojo.Ttz_goods" >
+    update ttz_goods
+    <set >
+      <if test="goodId != null" >
+        good_id = #{goodId,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=INTEGER},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="displayOrder != null" >
+        display_order = #{displayOrder,jdbcType=INTEGER},
+      </if>
+      <if test="goodName != null" >
+        good_name = #{goodName,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="marketPrice != null" >
+        market_price = #{marketPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="cover != null" >
+        cover = #{cover,jdbcType=VARCHAR},
+      </if>
+      <if test="shopCoupon != null" >
+        shop_coupon = #{shopCoupon,jdbcType=VARCHAR},
+      </if>
+      <if test="shopCouponPrice != null" >
+        shop_coupon_price = #{shopCouponPrice,jdbcType=REAL},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="salesAmount != null" >
+        sales_amount = #{salesAmount,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cn.ttz.pojo.Ttz_goods" >
+    update ttz_goods
+    set good_id = #{goodId,jdbcType=VARCHAR},
+      start_time = #{startTime,jdbcType=INTEGER},
+      end_time = #{endTime,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=INTEGER},
+      status = #{status,jdbcType=TINYINT},
+      display_order = #{displayOrder,jdbcType=INTEGER},
+      good_name = #{goodName,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      market_price = #{marketPrice,jdbcType=DECIMAL},
+      cover = #{cover,jdbcType=VARCHAR},
+      shop_coupon = #{shopCoupon,jdbcType=VARCHAR},
+      shop_coupon_price = #{shopCouponPrice,jdbcType=REAL},
+      url = #{url,jdbcType=VARCHAR},
+      sales_amount = #{salesAmount,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  
+    <!-- 后续添加 -->
+   <select id="selectPage" resultMap="Jihes_goodsMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Jihes_List" />
+    from ttz_goods  as a, jihes_goods as b where a.good_id = b.item_id 
+    order by a.status,a.display_order limit #{page},#{limit}
+   </select>
+   
+   
+   
+   <select id="selectTtzGoodsId" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select id,good_id,start_time,end_time from ttz_goods where  
+     good_id in
+    <foreach collection="good_ids" item="item" index="index" open="(" close=")" separator=",">
+       #{item} 
+   </foreach>
+  </select>
+</mapper>

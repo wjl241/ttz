@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cn.ttz.dao.Jihes_userDao" >
+  <resultMap id="BaseResultMap" type="com.cn.ttz.pojo.Jihes_user" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="identity" property="identity" jdbcType="TINYINT" />
+    <result column="taoke_id" property="taokeId" jdbcType="INTEGER" />
+    <result column="parent_id" property="parentId" jdbcType="INTEGER" />
+    <result column="points" property="points" jdbcType="INTEGER" />
+    <result column="login_time" property="loginTime" jdbcType="INTEGER" />
+    <result column="isdelete" property="isdelete" jdbcType="BIT" />
+    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+    <result column="taoke_pid" property="taokePid" jdbcType="VARCHAR" />
+    <result column="taoke_code" property="taokeCode" jdbcType="VARCHAR" />
+    <result column="taoke_follower" property="taokeFollower" jdbcType="INTEGER" />
+    <result column="taobao_user_id" property="taobaoUserId" jdbcType="VARCHAR" />
+    <result column="open_id" property="openId" jdbcType="CHAR" />
+    <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+    <result column="avatar" property="avatar" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="client_id" property="clientId" jdbcType="VARCHAR" />
+    <result column="bind_taoke_time" property="bindTaokeTime" jdbcType="INTEGER" />
+    <result column="balance" property="balance" jdbcType="DECIMAL" />
+    <result column="taoke_balance" property="taokeBalance" jdbcType="DECIMAL" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="alipay_id" property="alipayId" jdbcType="VARCHAR" />
+    <result column="alipay_name" property="alipayName" jdbcType="VARCHAR" />
+    <result column="bind_alipay_time" property="bindAlipayTime" jdbcType="INTEGER" />
+    <result column="bottle" property="bottle" jdbcType="VARCHAR" />
+    <result column="easemob_id" property="easemobId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, identity, taoke_id, parent_id, points, login_time, isdelete, create_time, update_time, 
+    taoke_pid, taoke_code, taoke_follower, taobao_user_id, open_id, nick_name, avatar, 
+    user_name, password, client_id, bind_taoke_time, balance, taoke_balance, city, phone, 
+    alipay_id, alipay_name, bind_alipay_time, bottle, easemob_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from jihes_user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from jihes_user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.cn.ttz.pojo.Jihes_user" >
+    insert into jihes_user (id, identity, taoke_id, 
+      parent_id, points, login_time, 
+      isdelete, create_time, update_time, 
+      taoke_pid, taoke_code, taoke_follower, 
+      taobao_user_id, open_id, nick_name, 
+      avatar, user_name, password, 
+      client_id, bind_taoke_time, balance, 
+      taoke_balance, city, phone, 
+      alipay_id, alipay_name, bind_alipay_time, 
+      bottle, easemob_id)
+    values (#{id,jdbcType=INTEGER}, #{identity,jdbcType=TINYINT}, #{taokeId,jdbcType=INTEGER}, 
+      #{parentId,jdbcType=INTEGER}, #{points,jdbcType=INTEGER}, #{loginTime,jdbcType=INTEGER}, 
+      #{isdelete,jdbcType=BIT}, #{createTime,jdbcType=INTEGER}, #{updateTime,jdbcType=INTEGER}, 
+      #{taokePid,jdbcType=VARCHAR}, #{taokeCode,jdbcType=VARCHAR}, #{taokeFollower,jdbcType=INTEGER}, 
+      #{taobaoUserId,jdbcType=VARCHAR}, #{openId,jdbcType=CHAR}, #{nickName,jdbcType=VARCHAR}, 
+      #{avatar,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{clientId,jdbcType=VARCHAR}, #{bindTaokeTime,jdbcType=INTEGER}, #{balance,jdbcType=DECIMAL}, 
+      #{taokeBalance,jdbcType=DECIMAL}, #{city,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
+      #{alipayId,jdbcType=VARCHAR}, #{alipayName,jdbcType=VARCHAR}, #{bindAlipayTime,jdbcType=INTEGER}, 
+      #{bottle,jdbcType=VARCHAR}, #{easemobId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cn.ttz.pojo.Jihes_user" >
+    insert into jihes_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="identity != null" >
+        identity,
+      </if>
+      <if test="taokeId != null" >
+        taoke_id,
+      </if>
+      <if test="parentId != null" >
+        parent_id,
+      </if>
+      <if test="points != null" >
+        points,
+      </if>
+      <if test="loginTime != null" >
+        login_time,
+      </if>
+      <if test="isdelete != null" >
+        isdelete,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="taokePid != null" >
+        taoke_pid,
+      </if>
+      <if test="taokeCode != null" >
+        taoke_code,
+      </if>
+      <if test="taokeFollower != null" >
+        taoke_follower,
+      </if>
+      <if test="taobaoUserId != null" >
+        taobao_user_id,
+      </if>
+      <if test="openId != null" >
+        open_id,
+      </if>
+      <if test="nickName != null" >
+        nick_name,
+      </if>
+      <if test="avatar != null" >
+        avatar,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="clientId != null" >
+        client_id,
+      </if>
+      <if test="bindTaokeTime != null" >
+        bind_taoke_time,
+      </if>
+      <if test="balance != null" >
+        balance,
+      </if>
+      <if test="taokeBalance != null" >
+        taoke_balance,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="alipayId != null" >
+        alipay_id,
+      </if>
+      <if test="alipayName != null" >
+        alipay_name,
+      </if>
+      <if test="bindAlipayTime != null" >
+        bind_alipay_time,
+      </if>
+      <if test="bottle != null" >
+        bottle,
+      </if>
+      <if test="easemobId != null" >
+        easemob_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="identity != null" >
+        #{identity,jdbcType=TINYINT},
+      </if>
+      <if test="taokeId != null" >
+        #{taokeId,jdbcType=INTEGER},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=INTEGER},
+      </if>
+      <if test="points != null" >
+        #{points,jdbcType=INTEGER},
+      </if>
+      <if test="loginTime != null" >
+        #{loginTime,jdbcType=INTEGER},
+      </if>
+      <if test="isdelete != null" >
+        #{isdelete,jdbcType=BIT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=INTEGER},
+      </if>
+      <if test="taokePid != null" >
+        #{taokePid,jdbcType=VARCHAR},
+      </if>
+      <if test="taokeCode != null" >
+        #{taokeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="taokeFollower != null" >
+        #{taokeFollower,jdbcType=INTEGER},
+      </if>
+      <if test="taobaoUserId != null" >
+        #{taobaoUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="openId != null" >
+        #{openId,jdbcType=CHAR},
+      </if>
+      <if test="nickName != null" >
+        #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar != null" >
+        #{avatar,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="clientId != null" >
+        #{clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="bindTaokeTime != null" >
+        #{bindTaokeTime,jdbcType=INTEGER},
+      </if>
+      <if test="balance != null" >
+        #{balance,jdbcType=DECIMAL},
+      </if>
+      <if test="taokeBalance != null" >
+        #{taokeBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="alipayId != null" >
+        #{alipayId,jdbcType=VARCHAR},
+      </if>
+      <if test="alipayName != null" >
+        #{alipayName,jdbcType=VARCHAR},
+      </if>
+      <if test="bindAlipayTime != null" >
+        #{bindAlipayTime,jdbcType=INTEGER},
+      </if>
+      <if test="bottle != null" >
+        #{bottle,jdbcType=VARCHAR},
+      </if>
+      <if test="easemobId != null" >
+        #{easemobId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cn.ttz.pojo.Jihes_user" >
+    update jihes_user
+    <set >
+      <if test="identity != null" >
+        identity = #{identity,jdbcType=TINYINT},
+      </if>
+      <if test="taokeId != null" >
+        taoke_id = #{taokeId,jdbcType=INTEGER},
+      </if>
+      <if test="parentId != null" >
+        parent_id = #{parentId,jdbcType=INTEGER},
+      </if>
+      <if test="points != null" >
+        points = #{points,jdbcType=INTEGER},
+      </if>
+      <if test="loginTime != null" >
+        login_time = #{loginTime,jdbcType=INTEGER},
+      </if>
+      <if test="isdelete != null" >
+        isdelete = #{isdelete,jdbcType=BIT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=INTEGER},
+      </if>
+      <if test="taokePid != null" >
+        taoke_pid = #{taokePid,jdbcType=VARCHAR},
+      </if>
+      <if test="taokeCode != null" >
+        taoke_code = #{taokeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="taokeFollower != null" >
+        taoke_follower = #{taokeFollower,jdbcType=INTEGER},
+      </if>
+      <if test="taobaoUserId != null" >
+        taobao_user_id = #{taobaoUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="openId != null" >
+        open_id = #{openId,jdbcType=CHAR},
+      </if>
+      <if test="nickName != null" >
+        nick_name = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar != null" >
+        avatar = #{avatar,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="clientId != null" >
+        client_id = #{clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="bindTaokeTime != null" >
+        bind_taoke_time = #{bindTaokeTime,jdbcType=INTEGER},
+      </if>
+      <if test="balance != null" >
+        balance = #{balance,jdbcType=DECIMAL},
+      </if>
+      <if test="taokeBalance != null" >
+        taoke_balance = #{taokeBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="alipayId != null" >
+        alipay_id = #{alipayId,jdbcType=VARCHAR},
+      </if>
+      <if test="alipayName != null" >
+        alipay_name = #{alipayName,jdbcType=VARCHAR},
+      </if>
+      <if test="bindAlipayTime != null" >
+        bind_alipay_time = #{bindAlipayTime,jdbcType=INTEGER},
+      </if>
+      <if test="bottle != null" >
+        bottle = #{bottle,jdbcType=VARCHAR},
+      </if>
+      <if test="easemobId != null" >
+        easemob_id = #{easemobId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cn.ttz.pojo.Jihes_user" >
+    update jihes_user
+    set identity = #{identity,jdbcType=TINYINT},
+      taoke_id = #{taokeId,jdbcType=INTEGER},
+      parent_id = #{parentId,jdbcType=INTEGER},
+      points = #{points,jdbcType=INTEGER},
+      login_time = #{loginTime,jdbcType=INTEGER},
+      isdelete = #{isdelete,jdbcType=BIT},
+      create_time = #{createTime,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=INTEGER},
+      taoke_pid = #{taokePid,jdbcType=VARCHAR},
+      taoke_code = #{taokeCode,jdbcType=VARCHAR},
+      taoke_follower = #{taokeFollower,jdbcType=INTEGER},
+      taobao_user_id = #{taobaoUserId,jdbcType=VARCHAR},
+      open_id = #{openId,jdbcType=CHAR},
+      nick_name = #{nickName,jdbcType=VARCHAR},
+      avatar = #{avatar,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      client_id = #{clientId,jdbcType=VARCHAR},
+      bind_taoke_time = #{bindTaokeTime,jdbcType=INTEGER},
+      balance = #{balance,jdbcType=DECIMAL},
+      taoke_balance = #{taokeBalance,jdbcType=DECIMAL},
+      city = #{city,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      alipay_id = #{alipayId,jdbcType=VARCHAR},
+      alipay_name = #{alipayName,jdbcType=VARCHAR},
+      bind_alipay_time = #{bindAlipayTime,jdbcType=INTEGER},
+      bottle = #{bottle,jdbcType=VARCHAR},
+      easemob_id = #{easemobId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

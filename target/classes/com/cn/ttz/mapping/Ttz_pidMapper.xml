@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cn.ttz.dao.Ttz_pidDao" >
+  <resultMap id="BaseResultMap" type="com.cn.ttz.pojo.Ttz_pid" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="pid_type" property="pidType" jdbcType="TINYINT" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="isdelete" property="isdelete" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+    <result column="pid_name" property="pidName" jdbcType="VARCHAR" />
+    <result column="pid_hash" property="pidHash" jdbcType="CHAR" />
+    <result column="pid" property="pid" jdbcType="VARCHAR" />
+    <result column="appkey" property="appkey" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, pid_type, status, isdelete, create_time, update_time, pid_name, pid_hash, pid, 
+    appkey
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ttz_pid
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectValuePid" resultMap="BaseResultMap"  >
+    select 
+    <include refid="Base_Column_List" />
+    from ttz_pid
+    where status = 0 and isdelete = 0 order by id limit 1
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ttz_pid
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.cn.ttz.pojo.Ttz_bill" >
+    insert into ttz_pid (id, pid_type, status, 
+      isdelete, create_time, update_time, 
+      pid_name, pid_hash, pid, 
+      appkey)
+    values (#{id,jdbcType=INTEGER}, #{pidType,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, 
+      #{isdelete,jdbcType=TINYINT}, #{createTime,jdbcType=INTEGER}, #{updateTime,jdbcType=INTEGER}, 
+      #{pidName,jdbcType=VARCHAR}, #{pidHash,jdbcType=CHAR}, #{pid,jdbcType=VARCHAR}, 
+      #{appkey,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cn.ttz.pojo.Ttz_bill" >
+    insert into ttz_pid
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="pidType != null" >
+        pid_type,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="isdelete != null" >
+        isdelete,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="pidName != null" >
+        pid_name,
+      </if>
+      <if test="pidHash != null" >
+        pid_hash,
+      </if>
+      <if test="pid != null" >
+        pid,
+      </if>
+      <if test="appkey != null" >
+        appkey,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="pidType != null" >
+        #{pidType,jdbcType=TINYINT},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="isdelete != null" >
+        #{isdelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=INTEGER},
+      </if>
+      <if test="pidName != null" >
+        #{pidName,jdbcType=VARCHAR},
+      </if>
+      <if test="pidHash != null" >
+        #{pidHash,jdbcType=CHAR},
+      </if>
+      <if test="pid != null" >
+        #{pid,jdbcType=VARCHAR},
+      </if>
+      <if test="appkey != null" >
+        #{appkey,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cn.ttz.pojo.Ttz_bill" >
+    update ttz_pid
+    <set >
+      <if test="pidType != null" >
+        pid_type = #{pidType,jdbcType=TINYINT},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="isdelete != null" >
+        isdelete = #{isdelete,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=INTEGER},
+      </if>
+      <if test="pidName != null" >
+        pid_name = #{pidName,jdbcType=VARCHAR},
+      </if>
+      <if test="pidHash != null" >
+        pid_hash = #{pidHash,jdbcType=CHAR},
+      </if>
+      <if test="pid != null" >
+        pid = #{pid,jdbcType=VARCHAR},
+      </if>
+      <if test="appkey != null" >
+        appkey = #{appkey,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cn.ttz.pojo.Ttz_bill" >
+    update ttz_pid
+    set pid_type = #{pidType,jdbcType=TINYINT},
+      status = #{status,jdbcType=TINYINT},
+      isdelete = #{isdelete,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=INTEGER},
+      pid_name = #{pidName,jdbcType=VARCHAR},
+      pid_hash = #{pidHash,jdbcType=CHAR},
+      pid = #{pid,jdbcType=VARCHAR},
+      appkey = #{appkey,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <insert id="insertTtz_pids" parameterType="java.util.List" >
+     <selectKey resultType ="java.lang.Integer" keyProperty= "id"
+                   order= "AFTER">
+                  SELECT LAST_INSERT_ID()
+     </selectKey >
+    insert into ttz_pid ( pid_type, status, 
+      isdelete, create_time, update_time, 
+      pid_name, pid_hash, pid, 
+      appkey)
+    values 
+    
+     <foreach collection ="list" item="ttz_pids" index= "index" separator =",">
+           ( #{ttz_pids.pidType},#{ttz_pids.status},#{ttz_pids.isdelete},#{ttz_pids.createTime},#{ttz_pids.updateTime},#{ttz_pids.pidName},#{ttz_pids.pidHash},#{ttz_pids.pid},#{ttz_pids.appkey}
+           )
+     </foreach >
+  </insert>
+</mapper>
