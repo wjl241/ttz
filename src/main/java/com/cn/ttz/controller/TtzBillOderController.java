@@ -259,5 +259,16 @@ public class TtzBillOderController {
 
 	
 	
+    
+    @RequestMapping("/getBillOrder")
+	/**
+	 * 领红包
+	 * @param request
+	 * @param response
+	 */
+	public  void getBillOrder(HttpServletRequest request,HttpServletResponse response){
+    	int user_id = 15;
+    	
+    }
 	
 }

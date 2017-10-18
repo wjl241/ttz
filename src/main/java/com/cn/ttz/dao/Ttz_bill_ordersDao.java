@@ -25,4 +25,6 @@ public interface Ttz_bill_ordersDao {
     int selectBillOrderCount(Map<String, Object> map);
     
     List<Ttz_bill_orders> selectMaxAmounts();
+    
+    List<Ttz_bill_orders> getRedPacket(Map<String, Object> map);
 }

@@ -40,4 +40,11 @@ public interface Ttz_bill_ordersService {
      * @return
      */
     List<Ttz_unfreeze> selectFreezeInfo(Map<String,Object> map);
+    
+    /**
+     * 领红包
+     * @param map
+     * @return
+     */
+    List<Ttz_bill_orders> getRedPacket(Map<String, Object> map);
 }

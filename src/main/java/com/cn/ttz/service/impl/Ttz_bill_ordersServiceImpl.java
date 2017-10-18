@@ -40,4 +40,8 @@ public class Ttz_bill_ordersServiceImpl implements Ttz_bill_ordersService{
 	public List<Ttz_unfreeze> selectFreezeInfo(Map<String, Object> map) {
 		return ttz_unfreezeDao.selectFreezeInfo(map);
 	}
+
+	public List<Ttz_bill_orders> getRedPacket(Map<String, Object> map) {
+		return ttz_bill_ordersDao.getRedPacket(map);
+	}
 }

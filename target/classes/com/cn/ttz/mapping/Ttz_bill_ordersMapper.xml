@@ -211,7 +211,12 @@
   </select>
   
   
-  
+   <select id="getRedPacket" resultMap="BaseResultMap" parameterType="java.util.Map"  >
+    select 
+    <include refid="Base_Column_List" />
+    from ttz_bill_orders where user_id = #{user_id} and status = 1  #{limit}
+
+  </select>
   
  
   
