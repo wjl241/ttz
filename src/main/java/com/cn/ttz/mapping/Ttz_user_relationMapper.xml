@@ -10,9 +10,12 @@
     <result column="create_time" property="createTime" jdbcType="INTEGER" />
     <result column="update_time" property="updateTime" jdbcType="INTEGER" />
     <result column="ttz_goods_id" property="ttzGoodsId" jdbcType="INTEGER" />
+    <result column="valid_time" property="validTime" jdbcType="INTEGER" />
+    <result column="window" property="window" jdbcType="TINYINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, user_id, parent_id, order_id, type, create_time, update_time, ttz_goods_id
+    id, user_id, parent_id, order_id, type, create_time, update_time, ttz_goods_id, valid_time, 
+    window
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -27,10 +30,12 @@
   <insert id="insert" parameterType="com.cn.ttz.pojo.Ttz_user_relation" >
     insert into ttz_user_relation (id, user_id, parent_id, 
       order_id, type, create_time, 
-      update_time, ttz_goods_id)
+      update_time, ttz_goods_id, valid_time, 
+      window)
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{parentId,jdbcType=INTEGER}, 
       #{orderId,jdbcType=INTEGER}, #{type,jdbcType=TINYINT}, #{createTime,jdbcType=INTEGER}, 
-      #{updateTime,jdbcType=INTEGER}, #{ttzGoodsId,jdbcType=INTEGER})
+      #{updateTime,jdbcType=INTEGER}, #{ttzGoodsId,jdbcType=INTEGER}, #{validTime,jdbcType=INTEGER}, 
+      #{window,jdbcType=TINYINT})
   </insert>
   <insert id="insertSelective" parameterType="com.cn.ttz.pojo.Ttz_user_relation" >
     insert into ttz_user_relation
@@ -59,6 +64,12 @@
       <if test="ttzGoodsId != null" >
         ttz_goods_id,
       </if>
+      <if test="validTime != null" >
+        valid_time,
+      </if>
+      <if test="window != null" >
+        window,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -84,6 +95,12 @@
       </if>
       <if test="ttzGoodsId != null" >
         #{ttzGoodsId,jdbcType=INTEGER},
+      </if>
+      <if test="validTime != null" >
+        #{validTime,jdbcType=INTEGER},
+      </if>
+      <if test="window != null" >
+        #{window,jdbcType=TINYINT},
       </if>
     </trim>
   </insert>
@@ -111,6 +128,12 @@
       <if test="ttzGoodsId != null" >
         ttz_goods_id = #{ttzGoodsId,jdbcType=INTEGER},
       </if>
+      <if test="validTime != null" >
+        valid_time = #{validTime,jdbcType=INTEGER},
+      </if>
+      <if test="window != null" >
+        window = #{window,jdbcType=TINYINT},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -122,7 +145,9 @@
       type = #{type,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=INTEGER},
       update_time = #{updateTime,jdbcType=INTEGER},
-      ttz_goods_id = #{ttzGoodsId,jdbcType=INTEGER}
+      ttz_goods_id = #{ttzGoodsId,jdbcType=INTEGER},
+      valid_time = #{validTime,jdbcType=INTEGER},
+      window = #{window,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

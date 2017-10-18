@@ -17,6 +17,10 @@ public class Ttz_user_relation {
 
     private Integer ttzGoodsId;
 
+    private Integer validTime;
+
+    private Byte window;
+
     public Integer getId() {
         return id;
     }
@@ -79,5 +83,21 @@ public class Ttz_user_relation {
 
     public void setTtzGoodsId(Integer ttzGoodsId) {
         this.ttzGoodsId = ttzGoodsId;
+    }
+
+    public Integer getValidTime() {
+        return validTime;
+    }
+
+    public void setValidTime(Integer validTime) {
+        this.validTime = validTime;
+    }
+
+    public Byte getWindow() {
+        return window;
+    }
+
+    public void setWindow(Byte window) {
+        this.window = window;
     }
 }

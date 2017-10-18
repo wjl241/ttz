@@ -44,4 +44,20 @@ public class Ttz_bill_ordersServiceImpl implements Ttz_bill_ordersService{
 	public List<Ttz_bill_orders> getRedPacket(Map<String, Object> map) {
 		return ttz_bill_ordersDao.getRedPacket(map);
 	}
+
+	public int updateRedPacket(Map<String, Object> map) {
+		return ttz_bill_ordersDao.updateRedPacket(map);
+	}
+
+	public List<Ttz_unfreeze> getNotunFreezeInfo(Map<String, Object> map) {
+		return ttz_unfreezeDao.getNotunFreezeInfo2(map);
+	}
+
+	public int insertUnfreezes(List<Ttz_unfreeze> ttz_unfreezes) {
+		return ttz_unfreezeDao.insertUnfreezes(ttz_unfreezes);
+	}
+
+	public Ttz_bill_orders selectFirstBill(Map<String, Object> map) {
+		return ttz_bill_ordersDao.selectFirstBill(map);
+	}
 }

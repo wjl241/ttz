@@ -47,4 +47,32 @@ public interface Ttz_bill_ordersService {
      * @return
      */
     List<Ttz_bill_orders> getRedPacket(Map<String, Object> map);
+    
+    /**
+     * 批量更新红包状态为已领取
+     * @param map
+     * @return
+     */
+    int updateRedPacket(Map<String, Object> map);
+    
+    /**
+     * 获取未解冻红包信息
+     * @param map
+     * @return
+     */
+    List<Ttz_unfreeze> getNotunFreezeInfo(Map<String,Object> map);
+    
+    /**
+     * 批量插入ttz_unfreeze，用于解冻操作
+     * @param ttz_unfreezes
+     * @return
+     */
+    int insertUnfreezes(List<Ttz_unfreeze> ttz_unfreezes);
+    
+    /**
+     * 获取第一个红包
+     * @param user_id
+     * @return
+     */
+    Ttz_bill_orders selectFirstBill(Map<String, Object> map);
 }

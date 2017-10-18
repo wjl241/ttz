@@ -128,16 +128,44 @@
   
   <!-- 新增方法 -->
    <select id="selectAmountByUserId" resultType="java.lang.Double" parameterType="java.lang.Integer" >
-    select sum(amount) 
+    select if(sum(amount) is null,0,sum(amount))
     from ttz_unfreeze 
     where user_id = #{userId,jdbcType=INTEGER}
   </select>
   
   
   <select id="selectFreezeInfo" resultMap="BaseResultMap"  parameterType="java.util.Map" >
-   SELECT a.receive_time as receive_time,user_id ,b.rate as rate FROM ttz_bill_orders AS a   
-   INNER JOIN  (SELECT SUM(rate) AS rate,receive_time  FROM ttz_unfreeze AS c  WHERE create_time > #{create_time}  GROUP BY c.receive_time) AS b
+   SELECT a.receive_time as receive_time,user_id ,b.rate as rate,sum(commission) as amount FROM ttz_bill_orders AS a   
+   INNER JOIN  (SELECT SUM(rate) AS rate,receive_time  FROM ttz_unfreeze AS c  WHERE create_time > #{create_time}
+    and user_id = #{user_id}   GROUP BY c.receive_time) AS b
 	ON b.receive_time = a.receive_time where
  	 user_id =  #{user_id} AND create_time >  #{create_time} GROUP BY a.receive_time  ;
   </select>
+  
+  
+  <select id="getNotunFreezeInfo2" resultMap="BaseResultMap"  parameterType="java.util.Map" >
+   select receive_time,user_id,sum(commission) as amount
+    from ttz_bill_orders where user_id = #{user_id} and receive_time 
+	not in (select receive_time  from ttz_unfreeze  where create_time &gt; #{create_time}  
+	group by receive_time) and receive_time &lt;#{receive_time} and status = 2  group by receive_time 
+  </select>
+  
+  
+  
+  <insert id="insertUnfreezes" parameterType="java.util.List" >
+     <selectKey resultType ="java.lang.Integer" keyProperty= "id"
+                   order= "AFTER">
+                  SELECT LAST_INSERT_ID()
+     </selectKey >
+      insert into ttz_unfreeze ( user_id, amount, 
+      create_time, update_time, status, 
+      rate, receive_time)
+    values 
+    
+     <foreach collection ="list" item="unFreeze" index= "index" separator =",">
+           ( #{unFreeze.userId}, #{unFreeze.amount}, #{unFreeze.createTime}, #{unFreeze.updateTime}, #{unFreeze.status}, #{unFreeze.rate}, #{unFreeze.receiveTime} 
+           )
+     </foreach >
+  </insert>
+
 </mapper>

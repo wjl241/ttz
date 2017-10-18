@@ -31,4 +31,19 @@ public interface Ttz_unfreezeDao {
      * @return
      */
     List<Ttz_unfreeze> selectFreezeInfo(Map<String,Object> map);
+    
+    /**
+     * 获取从未解冻过的解冻表
+     * @param map
+     * @return
+     */
+    List<Ttz_unfreeze> getNotunFreezeInfo2(Map<String,Object> map);
+    
+    /**
+     * 批量插入ttz_unfreeze，用于解冻操作
+     * @param ttz_unfreezes
+     * @return
+     */
+    int insertUnfreezes(List<Ttz_unfreeze> ttz_unfreezes);
+    
 }
