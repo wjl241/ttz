@@ -74,5 +74,5 @@ public interface Ttz_bill_ordersService {
      * @param user_id
      * @return
      */
-    Ttz_bill_orders selectFirstBill(Map<String, Object> map);
+    List<Ttz_bill_orders> selectFirstBill(Map<String, Object> map);
 }

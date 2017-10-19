@@ -29,6 +29,8 @@ public class Ttz_bill_orders {
 
     private String receiveTime;
 
+    private Byte receive;
+
     public Integer getId() {
         return id;
     }
@@ -131,5 +133,13 @@ public class Ttz_bill_orders {
 
     public void setReceiveTime(String receiveTime) {
         this.receiveTime = receiveTime == null ? null : receiveTime.trim();
+    }
+
+    public Byte getReceive() {
+        return receive;
+    }
+
+    public void setReceive(Byte receive) {
+        this.receive = receive;
     }
 }

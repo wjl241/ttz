@@ -195,11 +195,11 @@
   </select>
   
    <select id="selectBillOrderAmout" resultType="java.lang.Double" parameterType="java.util.Map" >
-    select if(sum(commission) is null,0,sum(commission)) from ttz_bill_orders where user_id = #{user_id} and status =#{status}
+    select if(sum(commission) is null,0,sum(commission)) from ttz_bill_orders where user_id = #{user_id} and (status = #{status1} or status = #{status2})
   </select>
   
     <select id="selectBillOrderCount" resultType="java.lang.Integer" parameterType="java.util.Map" >
-    select count(1) from ttz_bill_orders where user_id = #{user_id} and status =#{status}
+    select count(1) from ttz_bill_orders where user_id = #{user_id} and status = 1 and expire_time &gt; #{expire_time}
   </select>
 
 
@@ -236,7 +236,7 @@
     select 
     <include refid="Base_Column_List" /> 
     from ttz_bill_orders where user_id = #{user_id} and receive_time 
-	not in (select receive_time  from ttz_unfreeze  where create_time &gt; #{create_time}  
+	not in (select receive_time  from ttz_unfreeze  where create_time &gt; #{create_time}  and user_id = #{user_id}
 	group by receive_time) and receive_time &lt;#{receive_time} and status = 2 
   </select>
   
@@ -245,7 +245,7 @@
     select 
     <include refid="Base_Column_List" />
     from ttz_bill_orders
-    where user_id = #{user_id} and status = 1 
-    and expire_time &gt; #{expire_time}  order by receive_time 
+    where user_id = #{user_id} and status = 2 
+    and expire_time &gt; #{expire_time}  order by receive_time limit 1
   </select>
 </mapper>

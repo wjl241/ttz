@@ -115,9 +115,16 @@ public class TtzBillOderController {
 		int status = 2;
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("user_id", user_id);
-		map.put("status", status);
+		map.put("status1", 2);//已领取
+		map.put("status2", 4);//失效
+		
 		double ylqAmount = ttz_bill_ordersService.selectBillOrderAmout(map);//已领取金额
+		map.put("status2", 2);//失效
+		double djdAmount = ttz_bill_ordersService.selectBillOrderAmout(map);//所有需要解冻金额
 		System.err.println("领取总数："+ylqAmount);
+		map = new HashMap<String, Object>();
+		map.put("user_id", user_id);
+		map.put("expire_time", Integer.valueOf(String.valueOf(System.currentTimeMillis()/1000)));
 		int dlqCount = ttz_bill_ordersService.selectBillOrderCount(map);//待领取红包总数
 		System.err.println("待领取总数："+dlqCount);
 		
@@ -134,8 +141,8 @@ public class TtzBillOderController {
 		
 	
 		double txAmount = ttz_bill_ordersService.selectAmountByUserId(user_id);//已提现金额
-		BigDecimal a1 = new BigDecimal(ylqAmount);
-		BigDecimal a2 = new BigDecimal(txAmount);
+		BigDecimal a1 = new BigDecimal(djdAmount).setScale(2, BigDecimal.ROUND_HALF_UP);
+		BigDecimal a2 = new BigDecimal(txAmount).setScale(2, BigDecimal.ROUND_HALF_UP);
 		double jdAmount = a1.subtract(a2).doubleValue();//解冻金额
 		
 	
@@ -166,38 +173,39 @@ public class TtzBillOderController {
 		
 		List<Ttz_unfreeze> notUnfreezes = ttz_bill_ordersService.getNotunFreezeInfo(map);
 		int minDay =10;
-		if(notUnfreezes ==null || notUnfreezes.size()<=0) {//没有解冻信息
-			map = new HashMap<String, Object>();
-			map.put("user_id", user_id);
-			map.put("expire_time", calendar.getTime().getTime()/1000);
-			Ttz_bill_orders firstOrder = ttz_bill_ordersService.selectFirstBill(map);
-			String firstReceiveTime = firstOrder.getReceiveTime();
-			long l1;
-			try {
-				l1 = sdf.parse(firstReceiveTime).getTime();
-				Date now2 = new Date();
-				long l2 = now2.getTime();
-				int sub2= (int) ((l2-l1)/1000);
-				DecimalFormat df2 = new DecimalFormat("0.00");
-				double hb_day3 =Double.valueOf(hb_day);
-				double floor2 = Math.floor(Double.valueOf(df2.format((float) sub2/(86400*hb_day3))));//相差几周，向下取整
-				if(floor2>=1) {
-					minDay = 0;
-				}else {
-					double a =Math.ceil((1-calculateProfit(Double.valueOf(df2.format((float) sub2/(86400*hb_day3)))))*hb_day3);
-					minDay =(int) a;
-				}
-				
-				data.put("ylqAmount", String.valueOf(ylqAmount));
-				data.put("dlqCount", String.valueOf(dlqCount));
-				data.put("jdAmount", String.valueOf(0.00));
-				data.put("freezeDay", String.valueOf(minDay));
-				data.put("list", list);
-				responseWriteInfo(200, "", data, response);
-				return;
-			} catch (ParseException e) {
-				logger.error("selectFreezeInfo后续解析异常",e);
-			}
+		if(notUnfreezes ==null || notUnfreezes.size()<=0) {//没有解冻信息，说明肯定有已领取的红包未解冻
+//			map = new HashMap<String, Object>();
+//			map.put("user_id", user_id);
+//			map.put("expire_time", calendar.getTime().getTime()/1000);
+//			List<Ttz_bill_orders> firstOrders = ttz_bill_ordersService.selectFirstBill(map);
+//			
+//			String firstReceiveTime = firstOrders.get(0).getReceiveTime();
+//			long l1;
+//			try {
+//				l1 = sdf.parse(firstReceiveTime).getTime();
+//				Date now2 = new Date();
+//				long l2 = now2.getTime();
+//				int sub2= (int) ((l2-l1)/1000);
+//				DecimalFormat df2 = new DecimalFormat("0.00");
+//				double hb_day3 =Double.valueOf(hb_day);
+//				double floor2 = Math.floor(Double.valueOf(df2.format((float) sub2/(86400*hb_day3))));//相差几周，向下取整
+//				if(floor2>=1) {
+//					minDay = 0;
+//				}else {
+//					double a =Math.ceil((1-calculateProfit(Double.valueOf(df2.format((float) sub2/(86400*hb_day3)))))*hb_day3);
+//					minDay =(int) a;
+//				}
+//				
+//				data.put("ylqAmount", String.valueOf(ylqAmount));
+//				data.put("dlqCount", String.valueOf(dlqCount));
+//				data.put("jdAmount", String.valueOf(jdAmount));
+//				data.put("freezeDay", String.valueOf(minDay));
+//				data.put("list", list);
+//				responseWriteInfo(200, "", data, response);
+//				return;
+//			} catch (ParseException e) {
+//				logger.error("selectFreezeInfo后续解析异常",e);
+//			}
 			
 			
 		}
@@ -537,7 +545,8 @@ public class TtzBillOderController {
 		map.put("create_time", calendar.getTime().getTime()/1000);
 		List<Ttz_unfreeze> freezeInfos = ttz_bill_ordersService.selectFreezeInfo(map);
 		
-		if(freezeInfos ==null || freezeInfos.size()<=0) {
+		
+		if((freezeInfos ==null || freezeInfos.size()<=0) && ttz_unfreezes.size()<=0) {
 			responseWriteInfo(600, "未找到需要解冻的金额", null, response);
 			return;
 		}

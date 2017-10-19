@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 public class Ttz_goods {
     private Integer id;
 
+    private Integer jihesGoodsId;
+
     private String goodId;
 
     private Integer startTime;
@@ -35,12 +37,24 @@ public class Ttz_goods {
 
     private Integer salesAmount;
 
+    private Integer member;
+
+    private Integer number;
+
     public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getJihesGoodsId() {
+        return jihesGoodsId;
+    }
+
+    public void setJihesGoodsId(Integer jihesGoodsId) {
+        this.jihesGoodsId = jihesGoodsId;
     }
 
     public String getGoodId() {
@@ -161,5 +175,21 @@ public class Ttz_goods {
 
     public void setSalesAmount(Integer salesAmount) {
         this.salesAmount = salesAmount;
+    }
+
+    public Integer getMember() {
+        return member;
+    }
+
+    public void setMember(Integer member) {
+        this.member = member;
+    }
+
+    public Integer getNumber() {
+        return number;
+    }
+
+    public void setNumber(Integer number) {
+        this.number = number;
     }
 }

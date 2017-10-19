@@ -39,7 +39,7 @@ public class OrderTask {
 	private static final Logger logger = LoggerFactory.getLogger(OrderTask.class);
 	   public void doBiz() {
 		   System.err.println("11");
-		   //task();
+		   task();
 	   }
 	   
 	   public void task() {
@@ -56,7 +56,7 @@ public class OrderTask {
 			String start_date = sdf.format(now);
 			String end_date = sdf.format(tomorrow);
 			//TODO 存到配置表中，获取
-			String cookie = "MDAwMDAwMDAwMH-Lts2OsrOcsn2vpJDMfmh_24Sxs3qean6gqZ2LnYDLgK7Iz4KMu5y8kLZ1";
+			String cookie = "MDAwMDAwMDAwMH-I0M2Dpb6qvY3NpZDPimmBuIWjs6B8bH2HvZ2Bd4eUf4u2zIJqqmG9jap1";
 			
 			cookie = CookieUtil.think_decrypt(cookie);
 			cookie = "cookie2="+cookie;

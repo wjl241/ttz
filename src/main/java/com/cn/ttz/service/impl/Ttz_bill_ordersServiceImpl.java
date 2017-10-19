@@ -57,7 +57,7 @@ public class Ttz_bill_ordersServiceImpl implements Ttz_bill_ordersService{
 		return ttz_unfreezeDao.insertUnfreezes(ttz_unfreezes);
 	}
 
-	public Ttz_bill_orders selectFirstBill(Map<String, Object> map) {
+	public List<Ttz_bill_orders> selectFirstBill(Map<String, Object> map) {
 		return ttz_bill_ordersDao.selectFirstBill(map);
 	}
 }

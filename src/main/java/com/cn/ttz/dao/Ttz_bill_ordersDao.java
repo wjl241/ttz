@@ -32,5 +32,5 @@ public interface Ttz_bill_ordersDao {
     
     List<Ttz_bill_orders> getNotunFreezeInfo(Map<String,Object> map);
     
-    Ttz_bill_orders selectFirstBill(Map<String, Object> map);
+    List<Ttz_bill_orders> selectFirstBill(Map<String, Object> map);
 }

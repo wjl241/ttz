@@ -146,7 +146,7 @@
   <select id="getNotunFreezeInfo2" resultMap="BaseResultMap"  parameterType="java.util.Map" >
    select receive_time,user_id,sum(commission) as amount
     from ttz_bill_orders where user_id = #{user_id} and receive_time 
-	not in (select receive_time  from ttz_unfreeze  where create_time &gt; #{create_time}  
+	not in (select receive_time  from ttz_unfreeze  where create_time &gt; #{create_time}   and user_id = #{user_id} 
 	group by receive_time) and receive_time &lt;#{receive_time} and status = 2  group by receive_time 
   </select>
   
