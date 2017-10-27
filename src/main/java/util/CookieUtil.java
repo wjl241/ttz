@@ -68,7 +68,6 @@ public class CookieUtil {
 		}
 		
 		byte[] a1 =BASE64.decode(data.toCharArray());
-		
 		data = new String(a1);
 		
 		String expire = data.substring(0, 10);

@@ -58,33 +58,151 @@
 	</bean>
 	
 	<!-- 业务对象 -->
-	<bean id="bizObject" class="com.cn.ttz.timer.OrderTask" />
+	<bean id="bizObject1" class="com.cn.ttz.timer.OrderTask" />
+	<!-- 业务对象 -->
+	<bean id="bizObject2" class="com.cn.ttz.timer.billTask" />
+	<!-- 业务对象 -->
+	<bean id="bizObject3" class="com.cn.ttz.timer.PidTask" />
+	<!-- 业务对象 -->
+	<bean id="bizObject4" class="com.cn.ttz.timer.WLQTask" />
+	<!-- 业务对象 -->
+	<bean id="bizObject5" class="com.cn.ttz.timer.RedPacketExpireTask" />
+	<!-- 业务对象 -->
+	<bean id="bizObject6" class="com.cn.ttz.timer.NPCTask" />
 	
 	
 	<!-- 调度业务 -->
-	<bean id="jobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-    	<property name="targetObject" ref="bizObject" />
+	<bean id="jobDetail1" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    	<!-- 调用的类 -->  
+    	<property name="targetObject" ref="bizObject1" />
+    	<!-- 调用类中的方法 -->  
     	<property name="targetMethod" value="doBiz" />
+    	<!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->  
+        <property name="concurrent" value="false"/>  
+	</bean>
+	
+	<!-- 调度业务 -->
+	<bean id="jobDetail2" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    	<!-- 调用的类 -->  
+    	<property name="targetObject" ref="bizObject2" />
+    	<!-- 调用类中的方法 -->  
+    	<property name="targetMethod" value="doBiz" />
+    	<!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->  
+        <property name="concurrent" value="false"/>  
+	</bean>
+	
+	<!-- 调度业务 -->
+	<bean id="jobDetail3" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    	<!-- 调用的类 -->  
+    	<property name="targetObject" ref="bizObject3" />
+    	<!-- 调用类中的方法 -->  
+    	<property name="targetMethod" value="doBiz" />
+    	<!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->  
+        <property name="concurrent" value="false"/>  
+	</bean>
+	<!-- 调度业务 -->
+	<bean id="jobDetail4" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    	<!-- 调用的类 -->  
+    	<property name="targetObject" ref="bizObject4" />
+    	<!-- 调用类中的方法 -->  
+    	<property name="targetMethod" value="doBiz" />
+    	<!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->  
+        <property name="concurrent" value="false"/>  
+	</bean>
+	<!-- 调度业务 -->
+	<bean id="jobDetail5" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    	<!-- 调用的类 -->  
+    	<property name="targetObject" ref="bizObject5" />
+    	<!-- 调用类中的方法 -->  
+    	<property name="targetMethod" value="doBiz" />
+    	<!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->  
+        <property name="concurrent" value="false"/>  
+	</bean>
+	<!-- 调度业务 -->
+	<bean id="jobDetail6" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    	<!-- 调用的类 -->  
+    	<property name="targetObject" ref="bizObject6" />
+    	<!-- 调用类中的方法 -->  
+    	<property name="targetMethod" value="doBiz" />
+    	<!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->  
+        <property name="concurrent" value="false"/>  
 	</bean>
 	
 	<!-- 增加调度触发器 -->
 	<bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
-    	<property name="jobDetail" ref="jobDetail" />
+    	<property name="jobDetail" ref="jobDetail1" />
     	<!-- Cron表达式“10 */1 * * * ?”意为：从10秒开始，每1分钟执行一次。-->
     	<property name="cronExpression" value="10 0/1 * * * ?" />
 	</bean>
 	<!-- 该调度表示，延迟10秒启动，然后每隔1分钟执行一次。 -->
-	<bean id="taskTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
-	    <property name="jobDetail" ref="jobDetail" />
+	<bean id="taskTrigger1" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+	    <property name="jobDetail" ref="jobDetail1" />
 	    <property name="startDelay" value="2000" />
-	    <property name="repeatInterval" value="60000" />
+	    <property name="repeatInterval" value="300000" />
 	</bean>
 	
+	<!-- 该调度表示，延迟10秒启动，然后每隔1分钟执行一次。 -->
+	<bean id="taskTrigger2" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+	    <property name="jobDetail" ref="jobDetail2" />
+	    <property name="startDelay" value="10000" />
+	    <!-- 240000-->
+	    <property name="repeatInterval" value="240000" />
+	</bean>
+	
+	<!-- 该调度表示，延迟10秒启动，然后每隔1分钟执行一次。 -->
+	<bean id="cronTrigger3" class="org.springframework.scheduling.quartz.CronTriggerBean">
+    	<property name="jobDetail" ref="jobDetail3" />
+    	<!-- Cron表达式“0 46 13 * * ?”意为：每日0点10分执行。-->
+    	<property name="cronExpression" value="0 10 0 * * ?" />
+	</bean>
+	
+	<!-- 该调度表示，延迟10秒启动，然后每隔1分钟执行一次。 -->
+	<bean id="taskTrigger4" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+	    <property name="jobDetail" ref="jobDetail4" />
+	    <property name="startDelay" value="2000" />
+	    <property name="repeatInterval" value="120000" />
+	</bean>
+	
+	<!-- 该调度表示，延迟10秒启动，然后每隔1分钟执行一次。 -->
+	<bean id="cronTrigger4" class="org.springframework.scheduling.quartz.CronTriggerBean">
+    	<property name="jobDetail" ref="jobDetail4" />
+    	<!-- Cron表达式“0 0 9 * * ?” 每天9点触发 -->
+    	<property name="cronExpression" value="0 0 21 * * ?" />
+	</bean>
+	
+	<!-- 该调度表示，延迟3秒启动，然后每隔5分钟执行一次。 -->
+	<bean id="taskTrigger5" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+	    <property name="jobDetail" ref="jobDetail5" />
+	    <property name="startDelay" value="3000" />
+	    <property name="repeatInterval" value="300000" />
+	</bean>
+	
+	<!-- 该调度表示，延迟10秒启动，然后每隔1分钟执行一次。 -->
+	<bean id="taskTrigger6" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+	    <property name="jobDetail" ref="jobDetail6" />
+	    <property name="startDelay" value="10000" />
+	    <property name="repeatInterval" value="300000" />
+	</bean>
 	<!-- 设置调度 -->
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 	    <property name="triggers">
 	        <list>
-	            <ref bean="taskTrigger" />
+	        <!--  
+	          <ref bean="taskTrigger1" />
+	          <ref bean="taskTrigger2" />
+	          <ref bean="cronTrigger3" />
+	          <ref bean="cronTrigger4" />
+	          <ref bean="taskTrigger5" />    
+	          <ref bean="taskTrigger6" /> 
+	          
+	         -->
+	        
+	          <ref bean="taskTrigger1" />
+	          <ref bean="taskTrigger2" />
+	          <ref bean="cronTrigger3" />
+	          <ref bean="cronTrigger4" />
+	          <ref bean="taskTrigger5" />    
+	          <ref bean="taskTrigger6" /> 
 	        </list>
 	    </property>
 	    <property name="taskExecutor" ref="executor" />

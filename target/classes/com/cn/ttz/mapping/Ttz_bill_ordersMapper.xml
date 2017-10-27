@@ -15,10 +15,11 @@
     <result column="type" property="type" jdbcType="TINYINT" />
     <result column="ttz_goods_id" property="ttzGoodsId" jdbcType="INTEGER" />
     <result column="receive_time" property="receiveTime" jdbcType="VARCHAR" />
+    <result column="receive" property="receive" jdbcType="TINYINT" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, user_id, bill_sn, order_id, commission, create_time, update_time, expire_time, 
-    status, good_id, type, ttz_goods_id, receive_time
+    status, good_id, type, ttz_goods_id, receive_time, receive
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -35,12 +36,12 @@
       order_id, commission, create_time, 
       update_time, expire_time, status, 
       good_id, type, ttz_goods_id, 
-      receive_time)
+      receive_time, receive)
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{billSn,jdbcType=CHAR}, 
       #{orderId,jdbcType=INTEGER}, #{commission,jdbcType=DECIMAL}, #{createTime,jdbcType=INTEGER}, 
       #{updateTime,jdbcType=INTEGER}, #{expireTime,jdbcType=INTEGER}, #{status,jdbcType=TINYINT}, 
       #{goodId,jdbcType=VARCHAR}, #{type,jdbcType=TINYINT}, #{ttzGoodsId,jdbcType=INTEGER}, 
-      #{receiveTime,jdbcType=VARCHAR})
+      #{receiveTime,jdbcType=VARCHAR}, #{receive,jdbcType=TINYINT})
   </insert>
   <insert id="insertSelective" parameterType="com.cn.ttz.pojo.Ttz_bill_orders" >
     insert into ttz_bill_orders
@@ -84,6 +85,9 @@
       <if test="receiveTime != null" >
         receive_time,
       </if>
+      <if test="receive != null" >
+        receive,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -124,6 +128,9 @@
       </if>
       <if test="receiveTime != null" >
         #{receiveTime,jdbcType=VARCHAR},
+      </if>
+      <if test="receive != null" >
+        #{receive,jdbcType=TINYINT},
       </if>
     </trim>
   </insert>
@@ -166,6 +173,9 @@
       <if test="receiveTime != null" >
         receive_time = #{receiveTime,jdbcType=VARCHAR},
       </if>
+      <if test="receive != null" >
+        receive = #{receive,jdbcType=TINYINT},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -182,10 +192,12 @@
       good_id = #{goodId,jdbcType=VARCHAR},
       type = #{type,jdbcType=TINYINT},
       ttz_goods_id = #{ttzGoodsId,jdbcType=INTEGER},
-      receive_time = #{receiveTime,jdbcType=VARCHAR}
+      receive_time = #{receiveTime,jdbcType=VARCHAR},
+      receive = #{receive,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
 
+  
   <!-- 新增方法 -->
   <select id="selectByGoodId" resultType="java.lang.Integer" parameterType="java.util.Map" >
     select count(1) from ttz_bill_orders 
@@ -204,7 +216,7 @@
 
 
  <select id="selectMaxAmounts" resultMap="BaseResultMap"  >
-  select sum(a.commission) as commission,a.user_id,b.nick_name as good_id 
+  select count(1) as order_id,sum(a.commission) as commission,a.user_id,b.nick_name as good_id 
 	from ttz_bill_orders as a,jihes_user as b  where a.user_id = b.id 
 	group by user_id order by sum(commission) desc limit 6
 
@@ -224,7 +236,8 @@
   	<update id="updateRedPacket" parameterType="Map">    
         update ttz_bill_orders   set     
             status=#{status},    
-            update_time=#{update_time}    
+            update_time=#{update_time},
+            receive = 1    
        		where  expire_time &gt; #{expire_time}  and 
          <foreach collection="ids" item="item" open="(" close=")" separator="OR">  
   		 id = #{item}  
@@ -246,6 +259,70 @@
     <include refid="Base_Column_List" />
     from ttz_bill_orders
     where user_id = #{user_id} and status = 2 
-    and expire_time &gt; #{expire_time}  order by receive_time limit 1
+    and create_time &gt; #{expire_time}  order by receive_time limit 1
   </select>
+  
+  <!-- 批量生成红包 -->
+  <insert id="insertRedPackages" parameterType="java.util.List" >
+     <selectKey resultType ="java.lang.Integer" keyProperty= "id" order= "AFTER">
+             SELECT LAST_INSERT_ID()
+     </selectKey >
+     insert into ttz_bill_orders ( user_id, bill_sn, 
+      order_id, commission, create_time, 
+      update_time, expire_time, status, 
+      good_id, type, ttz_goods_id, 
+      receive_time, receive) values 
+    
+     <foreach collection ="list" item="item" index= "index" separator =",">
+            (#{item.userId},#{item.billSn},
+            #{item.orderId},#{item.commission},#{item.createTime},
+            #{item.updateTime},#{item.expireTime},#{item.status},
+            #{item.goodId},#{item.type},#{item.ttzGoodsId},
+            #{item.receiveTime},#{item.receive}) 
+     </foreach >
+  </insert>
+  
+   <!-- 处理过期红包状态 -->
+   <update id="dealExpireRedPacket" parameterType="java.lang.Integer" >
+    update ttz_bill_orders set status = 4,update_time = #{updateTime,jdbcType=INTEGER} 
+    where status = 0 and expire_time &lt; #{updateTime,jdbcType=INTEGER} 
+  </update>
+  
+  <!-- 未领取红包的user_id -->
+  <select id="selectWlqRedPacket" resultType="java.lang.Integer" parameterType="java.lang.Integer" >
+    select user_id 
+    from ttz_bill_orders
+    where  status = 1 
+    and expire_time &gt; #{expire_time}   group by user_id
+  </select>
+  
+  
+   <!-- 即将实效的红包user_id -->
+  <select id="selectWlqRedPacket2" resultType="java.lang.Integer" parameterType="java.lang.Integer" >
+    select user_id 
+    from ttz_bill_orders
+    where  status = 1 
+    and expire_time &lt; #{expire_time}   group by user_id
+  </select>
+  
+  
+  
+  <!-- 查询所有需要失效的红包id -->
+  <select id="selectExpireRedPacket" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select  
+     <include refid="Base_Column_List" />
+      from ttz_bill_orders where  order_id in 
+    ( select id from ttz_orders where order_status =13 
+    and create_time &gt; #{createTime,jdbcType=INTEGER} ) 
+    and status !=4 
+
+  </select>
+  
+    <!-- 即将实效的红包user_id -->
+  <select id="selectYLQRedPacket" resultType="java.lang.Integer" parameterType="java.lang.Integer" >
+     select count(1) from ttz_bill_orders where user_id =#{userId,jdbcType=INTEGER} 
+     
+  </select>
+  
+ 
 </mapper>

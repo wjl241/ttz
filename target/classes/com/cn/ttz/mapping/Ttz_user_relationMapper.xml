@@ -150,4 +150,12 @@
       window = #{window,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  
+  <select id="selectRelations" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from ttz_user_relation
+    where user_id = #{user_id} and valid_time &gt;= #{start_time} and valid_time &lt;#{end_time} 
+  </select>
 </mapper>

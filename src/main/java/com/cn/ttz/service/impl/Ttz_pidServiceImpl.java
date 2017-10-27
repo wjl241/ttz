@@ -27,5 +27,8 @@ public class Ttz_pidServiceImpl implements Ttz_pidService{
 	public int updateByPrimaryKeySelective(Ttz_pid pid) {
 		return ttz_pidDao.updateByPrimaryKeySelective(pid);
 	}
+	public int updatePids(Integer id) {
+		return ttz_pidDao.updatePids(id);
+	}
 
 }

@@ -14,4 +14,11 @@ public interface Jihes_userDao {
     int updateByPrimaryKeySelective(Jihes_user record);
 
     int updateByPrimaryKey(Jihes_user record);
+    
+    /**
+     * 查询NPC信息，phone以110开头的user
+     * @param count
+     * @return
+     */
+    Jihes_user selectNPCInfo(Integer count);
 }

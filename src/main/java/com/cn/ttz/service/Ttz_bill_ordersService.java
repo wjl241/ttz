@@ -3,7 +3,9 @@ package com.cn.ttz.service;
 import java.util.List;
 import java.util.Map;
 
+import com.cn.ttz.pojo.Jihes_sys_notification;
 import com.cn.ttz.pojo.Ttz_bill_orders;
+import com.cn.ttz.pojo.Ttz_orders;
 import com.cn.ttz.pojo.Ttz_unfreeze;
 
 public interface Ttz_bill_ordersService {
@@ -75,4 +77,81 @@ public interface Ttz_bill_ordersService {
      * @return
      */
     List<Ttz_bill_orders> selectFirstBill(Map<String, Object> map);
+    
+    /**
+     * 批量生成红包
+     * @return
+     */
+    int insertRedPackages( List<Ttz_bill_orders> list);
+    
+    
+    /**
+     * 查询此用户是否参团成功
+     * @param userId
+     * @return
+     */
+    Integer  selectIsTuan(Integer userId);
+    
+    
+    /**
+     * 每日零点15处理失效红包
+     * @param updateTime
+     * @return
+     */
+    int dealExpireRedPacket(Integer updateTime);
+    
+    
+    /**
+     * 获取所有未领取的红包
+     * @param expireTime
+     * @return
+     */
+    List<Integer> selectWlqRedPacket(Integer expireTime);
+    
+    /**
+     * 批量插入红包提示信息
+     * @param records
+     * @return
+     */
+    int insertNotifications(List<Jihes_sys_notification> records);
+   
+    
+    
+    /**
+     * 获取即将失效的红包
+     * @param expireTime
+     * @return
+     */
+    List<Integer> selectWlqRedPacket2(Integer expireTime);
+    
+    /**
+     * 获取失效的订单对应的红包
+     * @param createTime
+     * @return
+     */
+    List<Ttz_bill_orders> selectExpireRedPacket(Integer createTime);
+    
+    
+    /**
+     * 获取有效的订单数量
+     * @param ttz_goods_id
+     * @return
+     */
+    Integer  getValidOrderCount(Integer userId);
+    
+    
+    /**
+     * 查询
+     * @param userId
+     * @return
+     */
+    Integer selectYLQRedPacket(Integer userId);
+    
+    
+    /**
+     * 查询创建时间
+     * @param map
+     * @return
+     */
+    int  selectCreateTime(Map<String,Object> map);
 }

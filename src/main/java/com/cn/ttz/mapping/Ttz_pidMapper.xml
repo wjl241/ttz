@@ -174,4 +174,11 @@
            )
      </foreach >
   </insert>
+  
+   <update id="updatePids" parameterType="java.lang.Integer" >
+    update ttz_pid 
+      set status = 0,update_time =#{updateTime,jdbcType=INTEGER} 
+    where status = 1 
+  </update>
+  
 </mapper>

@@ -20,4 +20,11 @@ public interface Ttz_pidDao {
     int insertTtz_pids(List<Ttz_pid> pids);
     
     Ttz_pid selectValuePid();
+    
+    /**
+     * 凌晨批量重置
+     * @param id
+     * @return
+     */
+    int  updatePids(Integer id);
 }

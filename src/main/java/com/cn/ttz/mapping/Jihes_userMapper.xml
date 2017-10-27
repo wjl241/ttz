@@ -373,4 +373,12 @@
       easemob_id = #{easemobId,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <!-- 获取NPC用户信息，id 昵称 -->
+  <select id="selectNPCInfo" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from jihes_user
+    where phone like '110%' order by id limit #{count},1 
+  </select>
 </mapper>

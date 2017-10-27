@@ -469,4 +469,40 @@
 	    select count(1) from ttz_orders where goods_id =#{good_id} 
  		and user_id in (select user_id from ttz_user_pid where end_time &lt;= #{end_time} and start_time &gt;=#{start_time}) 
   	</select>
+  	
+  	
+  	<select id="selectGoodsNum" resultMap="BaseResultMap" parameterType="java.util.Map" >
+	    select count(1) as amount,ttz_goods_id from ttz_orders 
+	    where add_time &gt;= #{start_time} and add_time &lt; #{end_time} 
+	    and order_status in(3,12,13,24) group by ttz_goods_id 
+  	</select>
+  	
+  	
+  	<select id="getOrdersByGoodsId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+	    select  
+	    <include refid="Base_Column_List" />
+	     from ttz_orders where ttz_goods_id =#{ttzGoodsId,jdbcType=INTEGER} order by add_time 
+  	</select>
+  	
+  	<select id="getValidOrderCount" resultType="java.lang.Integer" parameterType="java.lang.Integer" >
+	    select   count(1)
+	     from ttz_orders where order_status in(12,3,200,24) and user_id = #{userId,jdbcType=INTEGER} 
+  	</select>
+  	
+  	<!-- 查询今日已经有有效参团情况的订单 -->
+  	<select id="getValuesOrders" resultMap="BaseResultMap" parameterType="java.util.Map" >
+	    select  
+	    <include refid="Base_Column_List" />
+	     from ttz_orders where ttz_goods_id 
+		in (select id from ttz_goods where  start_time &gt;= #{start_time} and end_time &lt;=#{end_time}) 
+		and order_status = 12 
+  	</select>
+  	
+  	<!-- 获取NPC的订单数量 -->
+  	<select id="getNPCOrderNumber" resultMap="BaseResultMap" parameterType="java.util.Map" >
+	   select ttz_goods_id,count(1) as amount from ttz_orders where pid = -1 
+	   and ttz_goods_id in (select id from ttz_goods where  start_time &gt;= #{start_time} and end_time &lt;=#{end_time}) 
+	   group by ttz_goods_id 
+  	</select>
+ 
 </mapper>

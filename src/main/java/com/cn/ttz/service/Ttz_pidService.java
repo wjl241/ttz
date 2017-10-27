@@ -20,4 +20,12 @@ public interface Ttz_pidService {
 	 * @return
 	 */
 	public int updateByPrimaryKeySelective(Ttz_pid pid);
+	
+	 
+    /**
+     * 凌晨批量重置
+     * @param id
+     * @return
+     */
+    int  updatePids(Integer id);
 }

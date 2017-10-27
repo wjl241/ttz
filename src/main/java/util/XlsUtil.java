@@ -193,7 +193,7 @@ public class XlsUtil {
 	                                    value += "'" + date1.replaceAll("'", "") + "',";
 	 
 	                                } else {
-	                                    value += "'" + (int) cell.getNumericCellValue() + "',";
+	                                    value += "'" +  cell.getNumericCellValue() + "',";
 	                                }
 	                                break;
 	                            case HSSFCell.CELL_TYPE_STRING:

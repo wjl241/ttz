@@ -1,6 +1,7 @@
 package com.cn.ttz.controller;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,8 +34,11 @@ import com.cn.ttz.pojo.Ttz_unfreeze;
 import com.cn.ttz.service.ConfigService;
 import com.cn.ttz.service.Ttz_bill_ordersService;
 
+import util.BASE64;
 import util.ConfigJson;
 import util.CookieUtil;
+import util.ForFile;
+import util.HttpClientUtils;
 
 @Controller
 @RequestMapping("/hbdetail")
@@ -49,9 +53,128 @@ public class TtzBillOderController {
 	private Ttz_bill_ordersService ttz_bill_ordersService;
 	@Resource
 	private ConfigService ConfigService;
+	
+	
+	
+	
+	/**
+     * 判断多级路径是否存在，不存在就创建 
+     *  
+     * @param filePath 支持带文件名的Path：如：D:\news\2014\12\abc.text，和不带文件名的Path：如：D:\news\2014\12
+     */
+  
+    public static void isExistDir(String filePath) {
+        String paths[] = {""};
+        //切割路径
+        try {
+            String tempPath = new File(filePath).getCanonicalPath();//File对象转换为标准路径并进行切割，有两种windows和linux
+            paths = tempPath.split("\\\\");//windows            
+            if(paths.length==1){paths = tempPath.split("/");}//linux
+        } catch (IOException e) {
+            System.out.println("切割路径错误");
+            e.printStackTrace();
+        }
+        //判断是否有后缀
+        boolean hasType = false;
+        if(paths.length>0){
+            String tempPath = paths[paths.length-1];
+            if(tempPath.length()>0){
+                if(tempPath.indexOf(".")>0){
+                    hasType=true;
+                }
+            }
+        }        
+        //创建文件夹
+        String dir = paths[0];
+        for (int i = 0; i < paths.length - (hasType?2:1); i++) {// 注意此处循环的长度，有后缀的就是文件路径，没有则文件夹路径
+            try {
+                dir = dir + "/" + paths[i + 1];//采用linux下的标准写法进行拼接，由于windows可以识别这样的路径，所以这里采用警容的写法
+                File dirFile = new File(dir);
+                if (!dirFile.exists()) {
+                    dirFile.mkdir();
+                    System.out.println("成功创建目录：" + dirFile.getCanonicalFile());
+                }
+            } catch (Exception e) {
+                System.err.println("文件夹创建发生异常");
+                e.printStackTrace();
+            }
+        }
+    }  
+	
+	@RequestMapping("/test")
+	public  void test(HttpServletRequest request,HttpServletResponse response) {
+		String path = System.getProperty("user.dir") + File.separator + "orders.xls";
+		String path2 =new File("").getAbsolutePath() + File.separator + "orders.xls";
+		String[] a = new String[2];
+		a[0] = path;
+		a[1] =path2;
+		path = path.replace("//", "/");
+		//boolean a1 =deleteFile("/test/ttz/aa.txt");
+		String info = "";
+		File file2 = new File("/usr/local/tomcat_test/webapps/ttz/WEB-INF/classes/com/cn/ttz/controller/b");
+		info=info+"0";
+		if(!file2.exists()) {
+			info=info+"1";
+			file2.setWritable(true,false);
+			boolean aaa = file2.mkdir();
+			if(aaa) {
+				info = info + "T";
+			}else {
+				info = info + "F";
+			}
+		}
+		
+		String hehe  = getPath();
+		info=info+"2";
+		info = ForFile.createFile("/usr/local/tomcat_test/webapps/ttz/WEB-INF/classes/com/cn/ttz/controller/aa.txt", "abcdefgadfsasdf",info);
+		info = info + "9";
+		
+//		File f = new File ("/test/ttz/aa.txt");
+//		if(!f.exists()) {
+//			try {
+//				f.createNewFile();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//		String b = "没删除";
+//		if(a1) {
+//			b ="删除";
+//		}
+		responseWriteInfo(200, path+","+path2+","+"hehe"+",info:"+info+"hehe:"+hehe, null, response);
+	}
+	
+	
+	  public static String test() throws IOException {  
+	        String filePath = "."+File.separator +"farParentfile" + File.separator + "parentFile"+File.separator + "test.jsp";  
+	          String info = "";
+	        File file = new File(filePath);  
+	          
+	          
+	        if (!file.getParentFile().exists()) {  
+	            if (!file.getParentFile().mkdirs()) {  
+	            }  
+	        }  
+	  
+	          
+	        if(!file.exists()) {  
+	            try {  
+	                file.createNewFile();  
+	            } catch (IOException e) {  
+	                e.printStackTrace();  
+	            }  
+	        }  
+	          
+	        System.out.println("exist: " +file.exists() );  
+	        info = info + "exist: " +file.exists() ;
+	          
+	        System.out.println("path: " + file.getCanonicalPath());  
+	        info = info + ",path: " + file.getCanonicalPath();
+	        return info;
+	    }  
 	@RequestMapping("/infos")
 	/**
-	 * 注册后 绑定上级团团关系
+	 * 获取红包信息
 	 * @param request
 	 * @param response
 	 */
@@ -82,8 +205,8 @@ public class TtzBillOderController {
 //		jsob.put("ab", ab);
 //		 responseWriteInfo(200,jsob.toJSONString() , null, response);
 //		 return;
-		
-		
+		String noUserRedPacket = "想要更多红包?赶紧分享或参加其他团团呗~";
+		String useRedPacket = "今日事今日毕，你真棒！；每天醒来，发现你和红包都在；带我败家带我飞，抢到红包so happy；红包我出，你开心就好；终于找到失散多年的红包君了！；世间始终你好，红包比比谁高；大金链子小手表，抢了红包吃烧烤；别紧张，我领个红包就走；世界那么大，我想领完红包就去看看。";
 		JSONObject ret = new JSONObject();
 		JSONObject data = new JSONObject();
 		JSONArray list = new JSONArray();
@@ -97,19 +220,45 @@ public class TtzBillOderController {
 			responseWriteInfo(401, "未登录", null, response);
 			return;
 		}
+		
+		String hb_day = ConfigService.selectConfig("ttz","hbdetail","hb_day");
+		if(hb_day ==null || hb_day.equals("")) {
+			 hb_day = "7";
+		}
+		
 		//获取最大信息
 		List<Ttz_bill_orders> maxOrders =  ttz_bill_ordersService.selectMaxAmounts();
-		if(maxOrders ==null || maxOrders.size()<=0) {
-			responseWriteInfo(600, "查询红包表异常", null, response);
-			return;
+		if(maxOrders ==null || maxOrders.size()<=0) {//为空，就放默认数据
+			list = addList();
+		}else {
+			int count = 0 ;
+			for(Ttz_bill_orders orders : maxOrders) {
+				jb = new JSONObject();
+				jb.put("sumAmount", orders.getCommission().setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+				jb.put("nickName", orders.getGoodId());
+				jb.put("userId", orders.getUserId());
+				count = ttz_bill_ordersService.getValidOrderCount(orders.getUserId());
+				jb.put("number", count);//购买数量
+				list.add(jb);
+			}
 		}
-		for(Ttz_bill_orders orders : maxOrders) {
-			jb = new JSONObject();
-			jb.put("sumAmount", orders.getCommission());
-			jb.put("nickName", orders.getGoodId());
-			jb.put("userId", orders.getUserId());
-			list.add(jb);
+		
+		String os_type = request.getParameter("os_type") == null ? "" : request.getParameter("os_type");
+//		if(os_type.equals("2")) {//安卓
+//			tuan = ttz_bill_ordersService.selectIsTuan(user_id);//是否参团成功 0 失败 1 成功
+//		}else {//IOS
+//			 tuan = ttz_bill_ordersService.selectYLQRedPacket(user_id);//是否成功
+//		}
+		int tuan = ttz_bill_ordersService.selectYLQRedPacket(user_id);//有红包就传1 没有传0
+	
+		if(tuan > 0) {
+			data.put("tuan", "1");
+		}else {
+			data.put("tuan", "0");
 		}
+		
+		
+	
 		
 		
 		int status = 2;
@@ -128,6 +277,11 @@ public class TtzBillOderController {
 		int dlqCount = ttz_bill_ordersService.selectBillOrderCount(map);//待领取红包总数
 		System.err.println("待领取总数："+dlqCount);
 		
+		if(dlqCount == 0) {
+			data.put("showMessage", noUserRedPacket);
+		}else {
+			data.put("showMessage", "");
+		}
 		
 		if(ylqAmount ==0 ) {//没有领取红包，没有待领取金额，直接返回
 			data.put("ylqAmount", String.valueOf(ylqAmount));
@@ -135,6 +289,8 @@ public class TtzBillOderController {
 			data.put("jdAmount", String.valueOf(0.00));
 			data.put("freezeDay", String.valueOf(-1));
 			data.put("list", list);
+			data.put("allDay", hb_day);//每轮总天数
+			data.put("freezeMessage", "被解冻的红包金额，可立即提现!");
 			responseWriteInfo(200, "", data, response);
 			return;
 		}
@@ -154,10 +310,7 @@ public class TtzBillOderController {
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String hb_rate;
-		String hb_day = ConfigService.selectConfig("ttz","hbdetail","hb_day");
-		if(hb_day ==null || hb_day.equals("")) {
-			 hb_day = "7";
-		}
+	
 
 		
 		Calendar calendar = Calendar.getInstance();
@@ -167,9 +320,9 @@ public class TtzBillOderController {
 		map = new HashMap<String, Object>();
 		map.put("user_id", user_id);
 		map.put("create_time", calendar.getTime().getTime()/1000);
-		calendar = Calendar.getInstance();
-		calendar.add(Calendar.DATE, -Integer.valueOf(hb_day));
-		map.put("receive_time", sdf.format(calendar.getTime()));
+		Calendar calendar2 = Calendar.getInstance();
+		calendar2.add(Calendar.DATE, -Integer.valueOf(hb_day));
+		map.put("receive_time", sdf.format(calendar2.getTime()));
 		
 		List<Ttz_unfreeze> notUnfreezes = ttz_bill_ordersService.getNotunFreezeInfo(map);
 		int minDay =10;
@@ -220,12 +373,51 @@ public class TtzBillOderController {
 			List<Ttz_unfreeze> freezeInfos = ttz_bill_ordersService.selectFreezeInfo(map);
 			
 			
-			if(freezeInfos ==null || freezeInfos.size()<=0) {//说明从未有过解冻信息
-				data.put("freezeDay", "-1");
+			if(freezeInfos ==null || freezeInfos.size()<=0) {//说明从未有过解冻信息,但有已领取的红包，此时计算解冻日期
+				
+				map = new HashMap<String, Object>();
+				map.put("user_id", user_id);
+				map.put("expire_time", calendar.getTime().getTime()/1000);//创建日期90天内的第一个红包
+				List<Ttz_bill_orders> firstOrders = ttz_bill_ordersService.selectFirstBill(map);
+				
+				String firstReceiveTime = firstOrders.get(0).getReceiveTime();
+				long l1;
+					try {
+						l1 = sdf.parse(firstReceiveTime).getTime();
+						Date now2 = new Date();
+						long l2 = now2.getTime();
+						int sub2= (int) ((l2-l1)/1000);
+						DecimalFormat df2 = new DecimalFormat("0.00");
+						double hb_day3 =Double.valueOf(hb_day);
+						double floor2 = Math.floor(Double.valueOf(df2.format((float) sub2/(86400*hb_day3))));//相差几周，向下取整
+						if(floor2>=1) {
+							minDay = 0;
+						}else {
+							double a =Math.ceil((1-calculateProfit(Double.valueOf(df2.format((float) sub2/(86400*hb_day3)))))*hb_day3);
+							minDay =(int) a;
+						}
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+			
+				data.put("freezeDay", minDay);
 				data.put("list", list);
-				ret.put("code",600 );
-				ret.put("message", "查询解冻信息表数据异常");
+				ret.put("code",200 );
+				ret.put("message", "");
 				ret.put("data", data);
+				data.put("allDay", hb_day);//每轮总天数
+				
+				
+				data.put("ylqAmount", String.valueOf(ylqAmount));
+				data.put("dlqCount", String.valueOf(dlqCount));
+				data.put("jdAmount", String.valueOf(jdAmount));
+				
+				if(minDay<=0) {
+					data.put("freezeMessage", "被解冻的红包金额，可立即提现!");
+				}else {
+					data.put("freezeMessage", "购物可加速解冻!距离下次解冻还剩:"+minDay+"天");
+				}
+				
 				responseWriteInfo(ret.toJSONString(), response);
 				return;
 			}
@@ -251,10 +443,11 @@ public class TtzBillOderController {
 					sub= (int) ((l2-l1)/1000);
 					floor = Math.floor(Double.valueOf(df.format((float) sub/(86400*hb_day2))));
 					//floor = Math.floor(Double.valueOf(xx/60/60/24)/hb_day2);//相差几个星期，向下取整
-					for(int i=0;i<floor;i++) {
+					int min = Math.min((int)floor, rates.length);
+					for(int i=0;i<min;i++) {
 						rateNum = rateNum +Integer.valueOf(rates[i]);
 					}
-					if(info.getRate() == rateNum) {//相等，说明本周已领
+					if(info.getRate() == rateNum || rateNum< info.getRate()) {//相等，说明本周已领,小于一般只会出现在修改领取周期的情况下
 						double a =Math.ceil((1-calculateProfit(Double.valueOf(df.format((float) sub/(86400*hb_day2)))))*hb_day2);
 						day =(int) a;
 					}else {//说明本周或前几周未领
@@ -267,7 +460,8 @@ public class TtzBillOderController {
 					
 				} catch (ParseException e) {
 					logger.error("selectFreezeInfo后续解析异常",e);
-					
+					responseWriteInfo(600, "selectFreezeInfo后续解析异常"+e.getMessage(), null, response);
+					return;
 				}
 			}
 		}
@@ -282,6 +476,12 @@ public class TtzBillOderController {
 		data.put("dlqCount", String.valueOf(dlqCount));
 		data.put("jdAmount", String.valueOf(jdAmount));
 		data.put("freezeDay", String.valueOf(minDay));
+		if(minDay<=0) {
+			data.put("freezeMessage", "被解冻的红包金额，可立即提现!");
+		}else {
+			data.put("freezeMessage", "购物可加速解冻!距离下次解冻还剩:"+minDay+"天");
+		}
+		data.put("allDay", hb_day);//每轮总天数
 		
 		data.put("list", list);
 		ret.put("data", data);
@@ -394,6 +594,7 @@ public class TtzBillOderController {
 	 * @param response
 	 */
 	public  void getBillOrder(HttpServletRequest request,HttpServletResponse response){
+    	
     	//根绝cookie获取request方法
 		int user_id = CookieUtil.getUserId(request, response);
 		if(user_id == -1 || user_id<0) {
@@ -415,14 +616,49 @@ public class TtzBillOderController {
     		responseWriteInfo(600, "mode格式异常", null, response);
     		return;
     	}
+    	
+    	String useRedPacket = "今日事今日毕，你真棒！;每天醒来，发现你和红包都在;带我败家带我飞，抢到红包so happy;红包我出，你开心就好;终于找到失散多年的红包君了！;世间始终你好，红包比比谁高;大金链子小手表，抢了红包吃烧烤;别紧张，我领个红包就走；世界那么大，我想领完红包就去看看";
+    	
+    	String[] showMessages = useRedPacket.split(";");
+    	
+    	int status = 2;
     	Map<String,Object> map = new HashMap<String, Object>();
+		map.put("user_id", user_id);
+		map.put("status1", 2);//已领取
+		map.put("status2", 4);//失效
+		
+		double ylqAmount = ttz_bill_ordersService.selectBillOrderAmout(map);//已领取金额
+		map.put("status2", 2);//失效
+		//double djdAmount = ttz_bill_ordersService.selectBillOrderAmout(map);//所有需要解冻金额
+		System.err.println("领取总数："+ylqAmount);
+		map = new HashMap<String, Object>();
+		map.put("user_id", user_id);
+		map.put("expire_time", Integer.valueOf(String.valueOf(System.currentTimeMillis()/1000)));
+		int dlqCount = ttz_bill_ordersService.selectBillOrderCount(map);//待领取红包总数
+		if(mode.equals("1")) {
+			dlqCount = 0;
+		}else {
+			dlqCount =dlqCount -1;
+		}
+		int number = new Random().nextInt(8);
+		String showMessage = "";
+		if(dlqCount  == 0) {
+			showMessage = showMessages[number];
+		}
+		JSONObject data = new JSONObject();
+		data.put("showMessage", showMessage);
+		System.err.println("待领取总数："+dlqCount);
+    	
+    	
+    	
+		map = new HashMap<String, Object>();
     	map.put("user_id", user_id);
     	map.put("limit", limit);
     	map.put("expire_time", Integer.valueOf(String.valueOf(System.currentTimeMillis()/1000)));
     	List<Ttz_bill_orders> ttz_bill_orders = ttz_bill_ordersService.getRedPacket(map);
     	
     	if(ttz_bill_orders ==null || ttz_bill_orders.size()<=0) {
-    		responseWriteInfo(600, "红包数量为0", null, response);
+    		responseWriteInfo(600, "红包数量为0，无法领取", null, response);
     		return;
     	}
     	List<Integer> orderIds = new ArrayList<Integer>();
@@ -444,9 +680,18 @@ public class TtzBillOderController {
     	}
     	
     	
-    	JSONObject data = new JSONObject();
+    	
+    	
+    	
+    
+    	
+    	String ylqAmount2 = new BigDecimal(ylqAmount).add(decimal).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+    	
+    	
 		data.put("lqAmout", String.valueOf(decimal));//领取红包金额
 		data.put("count", count);//领取红包数量
+		data.put("ylqAmount", ylqAmount2);//已领取红包金额
+		data.put("dlqCount", dlqCount);//待领取红包数量
 		responseWriteInfo(200, "", data, response);
 		return;
     	
@@ -469,7 +714,11 @@ public class TtzBillOderController {
     	//int user_id =15;
     	
     	List<Ttz_unfreeze> ttz_unfreezes = new ArrayList<Ttz_unfreeze>();
+    	BigDecimal allAmount = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
     	BigDecimal totalAmount = new BigDecimal("0.00");
+    	BigDecimal totalAmount2 = new BigDecimal("0.00");
+    	BigDecimal totalAmount3 = new BigDecimal("0.00");
+    	BigDecimal totalAmount4 = new BigDecimal("0.00");
     	Ttz_unfreeze ttz_unfreeze = new Ttz_unfreeze();
     	Map<String,Object> map = new HashMap<String, Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -507,14 +756,16 @@ public class TtzBillOderController {
 		DecimalFormat df = new DecimalFormat("0.00");
 		int sub;
 		int nowRate = 0;
+		
 		for(Ttz_unfreeze info : notUnfreezes) {
 			try {
 			int rateNum = 0;
 			l1 = sdf.parse(info.getReceiveTime()).getTime();
 			sub= (int) ((l2-l1)/1000);
 			floor = Math.floor(Double.valueOf(df.format((float) sub/(86400*hb_day2))));
+			int min = Math.min((int)floor, rates.length);
 			//floor = Math.floor(Double.valueOf(xx/60/60/24)/hb_day2);//相差几个星期，向下取整
-			for(int i=0;i<floor;i++) {
+			for(int i=0;i< min;i++) {
 				rateNum = rateNum +Integer.valueOf(rates[i]);
 			}
 			nowRate = rateNum;
@@ -526,9 +777,15 @@ public class TtzBillOderController {
 			info.setUpdateTime(Integer.valueOf(String.valueOf(System.currentTimeMillis()/1000)));
 			info.setStatus((byte)0);
 			info.setRate(nowRate);
-			info.setAmount(Rand(info.getAmount(), nowRate));
+			
+			
+			totalAmount = totalAmount.add(Rand(info.getAmount(), nowRate));
+			totalAmount2 = totalAmount2.add(Rand(info.getAmount(), nowRate));
+			totalAmount3 = totalAmount3.add(Rand(info.getAmount(), nowRate));
+			totalAmount4 = totalAmount4.add(Rand(info.getAmount(), nowRate));
+			info.setAmount(totalAmount);
+			allAmount = allAmount.add(totalAmount).setScale(2, BigDecimal.ROUND_HALF_UP);
 			ttz_unfreezes.add(info);
-			totalAmount = totalAmount.add(info.getAmount());
 			
 			} catch (ParseException e) {
 				responseWriteInfo(600, "ParseException Exc:"+e.getMessage(), null, response);
@@ -542,11 +799,12 @@ public class TtzBillOderController {
 		map = new HashMap<String, Object>();
     	map.put("user_id", user_id);
 		
-		map.put("create_time", calendar.getTime().getTime()/1000);
+		map.put("create_time", calendar.getTime().getTime()/1000);//90天
 		List<Ttz_unfreeze> freezeInfos = ttz_bill_ordersService.selectFreezeInfo(map);
 		
 		
 		if((freezeInfos ==null || freezeInfos.size()<=0) && ttz_unfreezes.size()<=0) {
+			//没有解冻信息，没有未使用解冻信息，此时还需要解冻的话，查找所有的红包，按照红包的时间来进行解冻
 			responseWriteInfo(600, "未找到需要解冻的金额", null, response);
 			return;
 		}
@@ -555,6 +813,7 @@ public class TtzBillOderController {
 		now = new Date();
 		l2 = now.getTime();
 		nowRate = 0;
+		
 		for(Ttz_unfreeze info : freezeInfos) {
 			try {
 				int rateNum = 0;
@@ -567,7 +826,7 @@ public class TtzBillOderController {
 				}
 				nowRate = rateNum - info.getRate();
 				if(nowRate<0) {
-					responseWriteInfo(600, "计算解冻比例异常", null, response);
+					responseWriteInfo(200, "计算解冻比例异常", null, response);
 					return;
 				}else if(info.getRate() == rateNum) {//相等，说明本周已领
 					continue;
@@ -577,9 +836,14 @@ public class TtzBillOderController {
 				info.setStatus((byte)0);
 				info.setRate(nowRate);
 				info.setAmount(Rand(info.getAmount(), nowRate));
-				ttz_unfreezes.add(info);
-				totalAmount = totalAmount.add(info.getAmount());
 				
+				totalAmount = totalAmount.add(Rand(info.getAmount(), nowRate));
+				totalAmount2 = totalAmount2.add(Rand(info.getAmount(), nowRate));
+				totalAmount3 = totalAmount3.add(Rand(info.getAmount(), nowRate));
+				totalAmount4 = totalAmount4.add(Rand(info.getAmount(), nowRate));
+				info.setAmount(totalAmount);
+				allAmount = allAmount.add(totalAmount).setScale(2, BigDecimal.ROUND_HALF_UP);
+				ttz_unfreezes.add(info);
 				//xx
 //				if(info.getRate() == rateNum) {//相等，说明本周已领
 //					double a =Math.ceil((1-calculateProfit(Double.valueOf(df.format((float) sub/(86400*hb_day2)))))*hb_day2);
@@ -605,25 +869,113 @@ public class TtzBillOderController {
 			responseWriteInfo(600, "解冻金额数量为0,请检查", null, response);
 			return;
 		}
-		int count = ttz_bill_ordersService.insertUnfreezes(ttz_unfreezes);
-		if(count <=0) {
-			responseWriteInfo(600, "解冻金额数量为0,请检查", null, response);
-			return;
+		
+		
+		
+		
+		
+		//入余额
+		HttpClientUtils httpClientUtil2 = new HttpClientUtils();
+		Map<String,String> createMap = new HashMap<String, String>();
+		char[] aa = BASE64.encode(intToBytes(user_id));
+		//createMap.put("user_id", new String(aa,0,aa.length));
+		createMap.put("user_id", String.valueOf(user_id));
+		createMap.put("type", String.valueOf(12));
+		createMap.put("balance", allAmount.toString());
+		
+		
+		String os_type = request.getParameter("os_type") == null ? "" : request.getParameter("os_type");
+		String os_version = request.getParameter("os_version") == null ? "" : request.getParameter("os_version");
+		String app_version = request.getParameter("app_version") == null ? "" : request.getParameter("app_version");
+		String api_version = request.getParameter("api_version") == null ? "" : request.getParameter("api_version");
+		String device_name = request.getParameter("device_name") == null ? "" : request.getParameter("device_name");
+		String client_id = request.getParameter("client_id") == null ? "" : request.getParameter("client_id");
+		String sign = request.getParameter("sign") == null ? "" : request.getParameter("sign");
+		String t = request.getParameter("t") == null ? "" : request.getParameter("t");
+		
+		String api_url = "http://api.jihes.com/ttz/balance?os_type="+os_type+"&os_version="+os_version+"&app_version="+app_version+"&api_version="+api_version+"&device_name="+device_name+"&client_id="+client_id+"&sign="+sign+"&t="+t;
+
+		api_url = api_url.replace(" ", "%20");
+		
+		String httpOrgCreateTestRtn2 = httpClientUtil2.doPost2(api_url,createMap,"utf-8"); 
+		int code =200;
+		String message = "";
+		boolean insert = true;
+		if(httpOrgCreateTestRtn2 == null || httpOrgCreateTestRtn2.equals("")) {
+			code = 600;
+			insert = false;
+			message = "入余额接口返回结果为空";
+		}else {
+			JSONObject jb = new JSONObject();
+			
+			jb = (JSONObject) JSONObject.parse(httpOrgCreateTestRtn2);
+			if(jb== null ) {//回滚数据
+				insert =false;
+				code = 600;
+				message = "空指针异常";
+			}else {
+				code = (Integer) jb.get("code");
+				message =  jb.get("message") == null ? "" : (String) jb.get("message");
+				if(code == 600) {//回滚数据
+					insert =false;
+				}
+			}
 		}
 		
 		
-		JSONObject data = new JSONObject();
+	
 		
-		data.put("totalAmount", totalAmount.toString());
+		
+		
+		
+		int count = 0;
+		if(insert) {
+			count = ttz_bill_ordersService.insertUnfreezes(ttz_unfreezes);
+		}
+		
+		
+		
+		
+		
+		
+		JSONObject data = new JSONObject();
+		String[] total = new String[4];
+		total[0] = totalAmount.toString();
+		total[1] = totalAmount2.toString();
+		total[2] = totalAmount3.toString();
+		total[3] = totalAmount4.toString();
+		data.put("totalAmount", total);
 		data.put("count", count);
-		responseWriteInfo(200, "", data, response);
+		data.put("reuslt", httpOrgCreateTestRtn2+",api_url:"+api_url);
+		
+		
+		if(code == 200) {
+			responseWriteInfo(200, "", data, response);
+		}else if(code == 600) {
+			responseWriteInfo(600, message, null, response);
+		}else {
+			responseWriteInfo(code, message, null, response);
+		}
+		
+		
+		
+		
+		
     	
     }
-	public static void main(String[] args) {
-		//System.err.println(calculateProfit(111.11));
-		//Rand2();
-	}
-	
+    
+    
+    public static byte[] intToBytes( int value )   
+    {   
+        byte[] src = new byte[4];  
+        src[3] =  (byte) ((value>>24) & 0xFF);  
+        src[2] =  (byte) ((value>>16) & 0xFF);  
+        src[1] =  (byte) ((value>>8) & 0xFF);    
+        src[0] =  (byte) (value & 0xFF);                  
+        return src;   
+    }  
+    
+
 	/**
 	 * 计算随机金额
 	 * @param amount
@@ -636,7 +988,6 @@ public class TtzBillOderController {
 		int max = amount.intValue();
 		Random random = new Random();
 		int s = random.nextInt(max)%(max-min+1) + min;
-		System.err.println(s);
 		DecimalFormat df = new DecimalFormat("0.00");
 		BigDecimal retAmount = new BigDecimal((df.format((float) s*rate/10000)));
 		if(retAmount.compareTo(new BigDecimal("0.01")) ==-1) {
@@ -651,14 +1002,115 @@ public class TtzBillOderController {
 	
 	
 	
+	/**
+	 * 造假数据
+	 * @return
+	 */
+	public static JSONArray addList(){
+		JSONArray list = new JSONArray();
+		JSONObject jb = new JSONObject();
+		jb.put("sumAmount", 143.7D);
+		jb.put("nickName", "150****4305");
+		jb.put("userId", -1);
+		jb.put("number", 17);
+		list.add(jb);
+		jb = new JSONObject();
+		jb.put("sumAmount", 113.4D);
+		jb.put("nickName", "小小强把");
+		jb.put("userId", -1);
+		jb.put("number", 16);
+		list.add(jb);
+		jb = new JSONObject();
+		jb.put("sumAmount", 104.6D);
+		jb.put("nickName", "186****3289");
+		jb.put("userId", -1);
+		jb.put("number", 16);
+		list.add(jb);
+		jb = new JSONObject();
+		jb.put("sumAmount", 103.1D);
+		jb.put("nickName", "tb_7133200");
+		jb.put("userId", -1);
+		jb.put("number", 15);
+		list.add(jb);
+		jb = new JSONObject();
+		jb.put("sumAmount", 98.3D);
+		jb.put("nickName", "赖头浩");
+		jb.put("userId", -1);
+		jb.put("number", 14);
+		list.add(jb);
+		return list;
+	}
 	
 	
 	
+	 /**
+     * 删除单个文件
+     *
+     * @param fileName
+     *            要删除的文件的文件名
+     * @return 单个文件删除成功返回true，否则返回false
+     */
+    public static boolean deleteFile(String fileName) {
+        File file = new File(fileName);
+        // 如果文件路径所对应的文件存在，并且是一个文件，则直接删除
+        if (file.exists() && file.isFile()) {
+            if (file.delete()) {
+                System.out.println("删除单个文件" + fileName + "成功！");
+                return true;
+            } else {
+                System.out.println("删除单个文件" + fileName + "失败！");
+                return false;
+            }
+        } else {
+            System.out.println("删除单个文件失败：" + fileName + "不存在！");
+            return false;
+        }
+    }
 	
+
 	
+	public static void main(String[] args) {
+		//System.err.println(calculateProfit(111.11));
+		//Rand2();
+		
+//		int number = new Random().nextInt(5);
+//		for(int i= 0;i<100;i++) {
+//			System.err.println(number = new Random().nextInt(5));
+//		}
+		char[] aa = new char[2];
+		aa[0] = 'a';
+		aa[1] = 'b';
+		String str = new String(aa,0,aa.length);
+		System.err.println(str);
+	}
 	
-	
-	
+	 public static String getPath(){
+		// 方式一
+		System.out.println(System.getProperty("user.dir"));
+		String info = "1:" + System.getProperty("user.dir");
+		// 方式二
+		File directory = new File("");// 设定为当前文件夹
+		try {
+			System.out.println(directory.getCanonicalPath());// 获取标准的路径
+			info = info+",2:" + directory.getCanonicalPath();
+			System.out.println(directory.getAbsolutePath());// 获取绝对路径
+			info = info+",3:" + directory.getAbsolutePath();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		// 方式三
+		System.out.println(TtzBillOderController.class.getResource("/"));
+		System.out.println(TtzBillOderController.class.getResource(""));
+		info = info+",4:" + TtzBillOderController.class.getResource("/");
+		info = info+",5:" + TtzBillOderController.class.getResource("");
+		// 方式4
+		System.out.println(TtzBillOderController.class.getClassLoader().getResource(""));
+		System.out.println(TtzBillOderController.class.getClassLoader().getResource("source.xml"));
+		info = info+",6:" + TtzBillOderController.class.getClassLoader().getResource("");
+		info = info+",7:" + TtzBillOderController.class.getClassLoader().getResource("");
+		return info;
+	}
+
 	
 	
 }

@@ -150,4 +150,59 @@
       ttz_goods_id = #{ttzGoodsId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <!-- 新增方法 -->
+  <update id="insertUnfreezes" parameterType="java.util.List" >
+   	update ttz_tuantuan
+     <foreach collection ="list" item="unFreeze" index= "index" separator =",">
+           ( #{unFreeze.userId}, #{unFreeze.amount}, #{unFreeze.createTime}, #{unFreeze.updateTime}, #{unFreeze.status}, #{unFreeze.rate}, #{unFreeze.receiveTime} 
+           )
+     </foreach >
+  </update>
+  
+ <!-- 未完成品，后期优化 --> 
+<update id="updateTuanStatus" parameterType="Map">    
+        update ttz_tuantuan   set     
+        status = 
+        	 <foreach collection="list" item="item" index="index" separator=" " open="case id" close="end">
+      			 when #{item.id,jdbcType=INTEGER} then #{item.status,jdbcType=TINYINT}
+			 </foreach>
+       	where  1=1  and 
+	         <foreach collection="list" item="item" open="(" close=")" separator="OR">  
+	  		      user_id = #{item.user_id} and ttz_goods_id = #{item.ttz_goods_id}  
+	  		</foreach>  
+	    
+  	</update>   
+ 
+  	
+  <!-- 
+  <select id="selectByUser_id" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from ttz_tuantuan
+    where user_id = #{user_id} and create_time &gt; #{start_time} and create_time &lt; #{end_time}  
+    and ttz_goods_id =#{ttz_goods_id}
+  </select>
+   -->	
+  <select id="selectByUser_id" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from ttz_tuantuan
+    where user_id = #{user_id} and create_time &gt; #{start_time} and create_time &lt; #{end_time}  
+    and ttz_goods_id =#{ttz_goods_id}
+  </select>
+  
+   <select id="selectByGoodId" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from ttz_tuantuan
+    where status = 3 and ttz_goods_id =#{ttz_goods_id} order by update_time desc 
+  </select>
+  
+  
+  <select id="selectIsTuan" resultType="java.lang.Integer" parameterType="java.lang.Integer" >
+    select count(1) from ttz_tuantuan where user_id = #{userId,jdbcType=INTEGER} and status = 3
+  </select>
+  
+ 
 </mapper>

@@ -22,4 +22,11 @@ public interface Ttz_goodsDao {
     List<Jihes_goods> selectPage(Map<String,Integer> map) ;
     
     List<Ttz_goods> selectTtzGoodsId(Map<String,Object> map);
+    
+    /**
+     * 根据id批量查询
+     * @param map
+     * @return
+     */
+    List<Ttz_goods> selectGoodPerson(Map<String,Object> map);
 }
