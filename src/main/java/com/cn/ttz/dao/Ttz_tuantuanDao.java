@@ -47,5 +47,13 @@ public interface Ttz_tuantuanDao {
      */
     Integer  selectIsTuan(Integer userId);
     
+    /**
+     * 修改团团用户数量
+     * @param map
+     * @return
+     */
+    int updateExpireTuanStatus(Map<String,Object> map);
+    
+    
    
 }

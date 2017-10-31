@@ -154,4 +154,11 @@ public interface Ttz_bill_ordersService {
      * @return
      */
     int  selectCreateTime(Map<String,Object> map);
+    
+    /**
+     * 对selectFreezeInfo 的补充，获取所有购买过的时间集合，然后过滤掉有解冻信息的情况，rate默认为0
+     * @param map
+     * @return
+     */
+    List<Ttz_unfreeze> selectFreezeInfoNoFreeze(Map<String,Object> map);
 }

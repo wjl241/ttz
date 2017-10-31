@@ -220,6 +220,7 @@ public class TtzBillOderController {
 			responseWriteInfo(401, "未登录", null, response);
 			return;
 		}
+		//int user_id = 8587;
 		
 		String hb_day = ConfigService.selectConfig("ttz","hbdetail","hb_day");
 		if(hb_day ==null || hb_day.equals("")) {
@@ -309,6 +310,7 @@ public class TtzBillOderController {
 		
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String hb_rate;
 	
 
@@ -322,7 +324,12 @@ public class TtzBillOderController {
 		map.put("create_time", calendar.getTime().getTime()/1000);
 		Calendar calendar2 = Calendar.getInstance();
 		calendar2.add(Calendar.DATE, -Integer.valueOf(hb_day));
-		map.put("receive_time", sdf.format(calendar2.getTime()));
+		try {
+			map.put("receive_time", sdf2.parse(sdf.format(calendar2.getTime())+" 23:59:59").getTime()/1000);
+		} catch (ParseException e1) {
+			logger.error("解析日期出错", e1);
+		}
+		//map.put("receive_time", sdf.format(calendar2.getTime())); //之前的处理，想用string进行大小值 判断，结果MySQL发现不理想
 		
 		List<Ttz_unfreeze> notUnfreezes = ttz_bill_ordersService.getNotunFreezeInfo(map);
 		int minDay =10;
@@ -422,6 +429,24 @@ public class TtzBillOderController {
 				return;
 			}
 			
+			
+			List<Ttz_unfreeze> freezeInfos2 = ttz_bill_ordersService.selectFreezeInfoNoFreeze(map);//所有有已领取红包记录的解冻集合
+			List<Ttz_unfreeze> freezeInfos3 = new ArrayList<Ttz_unfreeze>();
+			boolean has = false;
+			for(Ttz_unfreeze info2 : freezeInfos2) {
+				has = false;
+				for(Ttz_unfreeze info : freezeInfos) {
+					if(info.getReceiveTime().equals(info2.getReceiveTime())) {//若解冻信息已经有了，则跳过
+						has =true;
+						break;
+					}
+				}
+				if(!has) {//若info2是解冻信息都没有的，则加入到总信息中
+					freezeInfos3.add(info2);
+				}
+				
+			}
+			freezeInfos3.addAll(freezeInfos);
 			double hb_day2 =Double.valueOf(hb_day);
 			hb_rate = ConfigService.selectConfig("ttz","hbdetail","hb_rate");
 			if(hb_rate ==null) {
@@ -435,7 +460,7 @@ public class TtzBillOderController {
 			double floor;
 			DecimalFormat df = new DecimalFormat("0.00");
 			int sub;
-			for(Ttz_unfreeze info : freezeInfos) {
+			for(Ttz_unfreeze info : freezeInfos3) {
 				try {
 					int rateNum = 0;
 					int day;
@@ -617,7 +642,7 @@ public class TtzBillOderController {
     		return;
     	}
     	
-    	String useRedPacket = "今日事今日毕，你真棒！;每天醒来，发现你和红包都在;带我败家带我飞，抢到红包so happy;红包我出，你开心就好;终于找到失散多年的红包君了！;世间始终你好，红包比比谁高;大金链子小手表，抢了红包吃烧烤;别紧张，我领个红包就走；世界那么大，我想领完红包就去看看";
+    	String useRedPacket = "今日事今日毕，你真棒！;每天醒来，发现你和红包都在;带我败家带我飞，抢到红包so happy;红包我出，你开心就好;终于找到失散多年的红包君了！;世间始终你好，红包比比谁高;大金链子小手表，抢了红包吃烧烤;别紧张，我领个红包就走;世界那么大，我想领完红包就去看看";
     	
     	String[] showMessages = useRedPacket.split(";");
     	
@@ -711,7 +736,7 @@ public class TtzBillOderController {
 			responseWriteInfo(401, "未登录", null, response);
 			return;
 		}
-    	//int user_id =15;
+    	//int user_id =8587;
     	
     	List<Ttz_unfreeze> ttz_unfreezes = new ArrayList<Ttz_unfreeze>();
     	BigDecimal allAmount = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -722,6 +747,7 @@ public class TtzBillOderController {
     	Ttz_unfreeze ttz_unfreeze = new Ttz_unfreeze();
     	Map<String,Object> map = new HashMap<String, Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String hb_rate;
 		String hb_day = ConfigService.selectConfig("ttz","hbdetail","hb_day");
 		if(hb_day ==null || hb_day.equals("")) {
@@ -744,9 +770,22 @@ public class TtzBillOderController {
 		map.put("user_id", user_id);
 		map.put("create_time", calendar.getTime().getTime()/1000);
 		Calendar calendar2 = Calendar.getInstance();
+		//calendar2.add(Calendar.DATE, -Integer.valueOf(hb_day));
+		//map.put("receive_time", sdf.format(calendar2.getTime()));
+		
 		calendar2.add(Calendar.DATE, -Integer.valueOf(hb_day));
-		map.put("receive_time", sdf.format(calendar2.getTime()));
+		try {
+			map.put("receive_time", sdf2.parse(sdf.format(calendar2.getTime())+" 23:59:59").getTime()/1000);
+		} catch (ParseException e1) {
+			logger.error("解析日期出错", e1);
+		}
+		
+		
 		List<Ttz_unfreeze> notUnfreezes = ttz_bill_ordersService.getNotunFreezeInfo(map);
+		
+		
+		
+		
 		int minDay =10;
 		//计算最少解冻日期
 		long l1;
@@ -925,7 +964,10 @@ public class TtzBillOderController {
 		
 	
 		
-		
+//		boolean insert =true;
+//		String httpOrgCreateTestRtn2 = "";
+//		int code =200;
+//		String message= "";
 		
 		
 		int count = 0;

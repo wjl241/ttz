@@ -70,4 +70,12 @@ public interface Ttz_ordersDao {
      * @return
      */
     List<Ttz_orders> getNPCOrderNumber(Map<String,Object> map);
+    
+    
+    /**
+     * 生成NPC订单
+     * @param list
+     * @return
+     */
+    Integer insertNPC(List<Ttz_orders> list);
 }

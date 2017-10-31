@@ -204,5 +204,14 @@
     select count(1) from ttz_tuantuan where user_id = #{userId,jdbcType=INTEGER} and status = 3
   </select>
   
+  <!-- 修改很久没变的正在参团团状态为未cantuan -->
+  
+   <update id="updateExpireTuanStatus" parameterType="java.util.Map" >
+    update ttz_tuantuan set
+      status = 1,
+      update_time = #{updateTime} 
+      where update_time &lt;= #{time1}  and update_time &gt;= #{time2}  and status = 2
+  </update>
+  
  
 </mapper>

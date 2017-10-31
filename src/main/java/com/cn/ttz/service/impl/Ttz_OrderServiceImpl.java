@@ -86,4 +86,9 @@ public class Ttz_OrderServiceImpl implements Ttz_OrderService {
 	public List<Ttz_orders> getNPCOrderNumber(Map<String, Object> map) {
 		return ttz_ordersDao.getNPCOrderNumber(map);
 	}
+
+	@Override
+	public Integer insertNPC(List<Ttz_orders> list) {
+		return ttz_ordersDao.insertNPC(list);
+	}
 }

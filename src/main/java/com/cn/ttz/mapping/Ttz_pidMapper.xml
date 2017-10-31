@@ -163,7 +163,7 @@
                    order= "AFTER">
                   SELECT LAST_INSERT_ID()
      </selectKey >
-    insert into ttz_pid ( pid_type, status, 
+    insert ignore into ttz_pid ( pid_type, status, 
       isdelete, create_time, update_time, 
       pid_name, pid_hash, pid, 
       appkey)

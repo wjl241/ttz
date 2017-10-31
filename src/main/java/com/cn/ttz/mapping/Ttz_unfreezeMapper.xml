@@ -142,12 +142,18 @@
  	 user_id =  #{user_id} AND create_time >  #{create_time} GROUP BY a.receive_time  ;
   </select>
   
+  <!-- 对selectFreezeInfo 的补充，获取所有已领取红包的时间集合，然后过滤掉有解冻信息的情况，rate默认为0 -->
+   <select id="selectFreezeInfoNoFreeze" resultMap="BaseResultMap"  parameterType="java.util.Map" >
+  	SELECT a.receive_time as receive_time,user_id ,0 as rate,sum(commission) as amount FROM ttz_bill_orders as a 
+  	where user_id =  #{user_id} AND create_time >  #{create_time}  and status = 2 GROUP BY a.receive_time  ;
+  </select>
+  
   
   <select id="getNotunFreezeInfo2" resultMap="BaseResultMap"  parameterType="java.util.Map" >
    select receive_time,user_id,sum(commission) as amount
     from ttz_bill_orders where user_id = #{user_id} and receive_time 
 	not in (select receive_time  from ttz_unfreeze  where create_time &gt; #{create_time}   and user_id = #{user_id} 
-	group by receive_time) and receive_time &lt;=#{receive_time} and status = 2  group by receive_time 
+	group by receive_time) and create_time &lt;=#{receive_time} and status = 2  group by receive_time 
   </select>
   
   

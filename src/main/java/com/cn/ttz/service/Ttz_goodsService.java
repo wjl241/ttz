@@ -27,5 +27,13 @@ public interface Ttz_goodsService {
 	   	 * @return
 	   	 */
 	   List<Ttz_goods> selectTtzGoodsId(Map<String,Object> map);
+	   
+	   
+	   /**
+	    * 修改很久没变的正在参团团状态为未参团
+	    * @param map
+	    * @return
+	    */
+	   int updateExpireTuanStatus(Map<String,Object> map);
 
 }

@@ -117,4 +117,9 @@ public class Ttz_bill_ordersServiceImpl implements Ttz_bill_ordersService{
 	public int selectCreateTime(Map<String, Object> map) {
 		return jihes_sys_notificationDao.selectCreateTime(map);
 	}
+
+	@Override
+	public List<Ttz_unfreeze> selectFreezeInfoNoFreeze(Map<String, Object> map) {
+		return ttz_unfreezeDao.selectFreezeInfoNoFreeze(map);
+	}
 }

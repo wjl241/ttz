@@ -481,7 +481,7 @@
   	<select id="getOrdersByGoodsId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
 	    select  
 	    <include refid="Base_Column_List" />
-	     from ttz_orders where ttz_goods_id =#{ttzGoodsId,jdbcType=INTEGER} order by add_time 
+	     from ttz_orders where ttz_goods_id =#{ttzGoodsId,jdbcType=INTEGER} order by id 
   	</select>
   	
   	<select id="getValidOrderCount" resultType="java.lang.Integer" parameterType="java.lang.Integer" >
@@ -505,4 +505,39 @@
 	   group by ttz_goods_id 
   	</select>
  
+ 
+ 
+ 	 <insert id="insertNPC" parameterType="java.util.List" >
+     <selectKey resultType ="java.lang.Integer" keyProperty= "id"
+                   order= "AFTER">
+                  SELECT LAST_INSERT_ID()
+     </selectKey >
+    insert into ttz_orders (id, user_id, pid_id, 
+      create_time, update_time, amount, 
+      price, commission_percent, order_status, 
+      order_hash, order_sn, add_time, 
+      goods_id, origin, income_ratio, 
+      divide_ratio, pay_amount, effects_prediction, 
+      checkout_amount, income_prediction, checkout_time, 
+      commission_ratio, commission_amount, category, 
+      site_id, adzone_id, goods_name, 
+      shopman_wangwang, store_name, subsidy_ratio, 
+      subsidy_amount, pid,ttz_goods_id)
+    VALUES  
+    
+     <foreach collection ="list" item="item" index= "index" separator =",">
+            (#{item.id},#{item.userId},#{item.pidId},
+            #{item.createTime},#{item.updateTime},#{item.amount},
+            #{item.price},#{item.commissionPercent},#{item.orderStatus},
+            #{item.orderHash},#{item.orderSn},#{item.addTime},
+            #{item.goodsId},#{item.origin},#{item.incomeRatio},
+            #{item.divideRatio},#{item.payAmount},#{item.effectsPrediction},
+            #{item.checkoutAmount},#{item.incomePrediction},#{item.checkoutTime},
+            #{item.commissionRatio},#{item.commissionAmount},#{item.category},   
+            #{item.siteId},#{item.adzoneId},#{item.goodsName},   
+            #{item.shopmanWangwang},#{item.storeName},#{item.subsidyRatio},   
+            #{item.subsidyAmount},#{item.pid},#{item.ttzGoodsId} ) 
+     </foreach >
+     
+  </insert>
 </mapper>
