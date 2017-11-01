@@ -41,6 +41,10 @@ public class Ttz_goods {
 
     private Integer number;
 
+    private Byte type;
+
+    private BigDecimal commissionRate;
+
     public Integer getId() {
         return id;
     }
@@ -191,5 +195,21 @@ public class Ttz_goods {
 
     public void setNumber(Integer number) {
         this.number = number;
+    }
+
+    public Byte getType() {
+        return type;
+    }
+
+    public void setType(Byte type) {
+        this.type = type;
+    }
+
+    public BigDecimal getCommissionRate() {
+        return commissionRate;
+    }
+
+    public void setCommissionRate(BigDecimal commissionRate) {
+        this.commissionRate = commissionRate;
     }
 }

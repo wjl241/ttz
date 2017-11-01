@@ -3,6 +3,7 @@
 <mapper namespace="com.cn.ttz.dao.Ttz_goodsDao" >
   <resultMap id="BaseResultMap" type="com.cn.ttz.pojo.Ttz_goods" >
     <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="jihes_goods_id" property="jihesGoodsId" jdbcType="INTEGER" />
     <result column="good_id" property="goodId" jdbcType="VARCHAR" />
     <result column="start_time" property="startTime" jdbcType="INTEGER" />
     <result column="end_time" property="endTime" jdbcType="INTEGER" />
@@ -20,9 +21,11 @@
     <result column="sales_amount" property="salesAmount" jdbcType="INTEGER" />
     <result column="member" property="member" jdbcType="INTEGER" />
     <result column="number" property="number" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="TINYINT" />
+    <result column="commission_rate" property="commissionRate" jdbcType="DECIMAL" />
   </resultMap>
 
-  <resultMap id="Jihes_goodsMap" type="com.cn.ttz.pojo.Jihes_goods" >
+<resultMap id="Jihes_goodsMap" type="com.cn.ttz.pojo.Jihes_goods" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="origin" property="origin" jdbcType="TINYINT" />
     <result column="status" property="status" jdbcType="TINYINT" />
@@ -57,18 +60,21 @@
     <result column="max_retio" property="maxRetio" jdbcType="REAL" />
     <result column="min_retio" property="minRetio" jdbcType="REAL" />
   </resultMap>
+
   <sql id="Base_Column_List" >
-    id, good_id, start_time, end_time, create_time, update_time, status, display_order, 
-    good_name, price, market_price, cover, shop_coupon, shop_coupon_price, url, sales_amount, member, number
+    id, jihes_goods_id, good_id, start_time, end_time, create_time, update_time, status, 
+    display_order, good_name, price, market_price, cover, shop_coupon, shop_coupon_price, 
+    url, sales_amount, member, number, type, commission_rate
   </sql>
 
-  <sql id="Jihes_List" >
+	<sql id="Jihes_List" >
    b.id,b.origin,b.status,b.dig,b.brand,b.category_id,b.sales_amount,b.start_time,b.end_time,b.
     view,b.isdelete,b.create_time,b.update_time,b.price,b.market_price,b.item_id,b.name,b.cover,b.
     official_coupon,b.shop_coupon,b.official_coupon_price,b.shop_coupon_price,b.tag,b.url,b.
     caption,b.web_collect_id,b.refresh_time,b.revelation_id,b.picture_time,b.major_hot,b.presell,b.
     max_retio,b.min_retio
   </sql>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
@@ -86,14 +92,16 @@
       good_name, price, market_price, 
       cover, shop_coupon, shop_coupon_price, 
       url, sales_amount, member, 
-      number)
+      number, type, commission_rate
+      )
     values (#{id,jdbcType=INTEGER}, #{jihesGoodsId,jdbcType=INTEGER}, #{goodId,jdbcType=VARCHAR}, 
       #{startTime,jdbcType=INTEGER}, #{endTime,jdbcType=INTEGER}, #{createTime,jdbcType=INTEGER}, 
       #{updateTime,jdbcType=INTEGER}, #{status,jdbcType=TINYINT}, #{displayOrder,jdbcType=INTEGER}, 
       #{goodName,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, #{marketPrice,jdbcType=DECIMAL}, 
       #{cover,jdbcType=VARCHAR}, #{shopCoupon,jdbcType=VARCHAR}, #{shopCouponPrice,jdbcType=REAL}, 
       #{url,jdbcType=VARCHAR}, #{salesAmount,jdbcType=INTEGER}, #{member,jdbcType=INTEGER}, 
-      #{number,jdbcType=INTEGER})
+      #{number,jdbcType=INTEGER}, #{type,jdbcType=TINYINT}, #{commissionRate,jdbcType=DECIMAL}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.cn.ttz.pojo.Ttz_goods" >
     insert into ttz_goods
@@ -155,6 +163,12 @@
       <if test="number != null" >
         number,
       </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="commissionRate != null" >
+        commission_rate,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -213,6 +227,12 @@
       </if>
       <if test="number != null" >
         #{number,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=TINYINT},
+      </if>
+      <if test="commissionRate != null" >
+        #{commissionRate,jdbcType=DECIMAL},
       </if>
     </trim>
   </insert>
@@ -273,6 +293,12 @@
       <if test="number != null" >
         number = #{number,jdbcType=INTEGER},
       </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=TINYINT},
+      </if>
+      <if test="commissionRate != null" >
+        commission_rate = #{commissionRate,jdbcType=DECIMAL},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -295,11 +321,13 @@
       url = #{url,jdbcType=VARCHAR},
       sales_amount = #{salesAmount,jdbcType=INTEGER},
       member = #{member,jdbcType=INTEGER},
-      number = #{number,jdbcType=INTEGER}
+      number = #{number,jdbcType=INTEGER},
+      type = #{type,jdbcType=TINYINT},
+      commission_rate = #{commissionRate,jdbcType=DECIMAL}
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-  
+ 
     <!-- 后续添加 -->
    <select id="selectPage" resultMap="Jihes_goodsMap" parameterType="java.util.Map" >
     select 
@@ -326,8 +354,7 @@
        #{item} 
     </foreach>
     </select>
-   
-   
-   
-   
+
+
+
 </mapper>
