@@ -228,6 +228,10 @@ public class OrderTask {
 				//order.setUserId(userId);
 				
 			}
+			
+			if(pids == null || pids.size()<=0) {
+				return;
+			}
 			Map<String,Object> map  = new HashMap<String, Object>();
 			map.put("pids", pids);
 			map.put("endTime", Integer.valueOf(String.valueOf(System.currentTimeMillis()/1000)));
