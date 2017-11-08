@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:tx="http://www.springframework.org/schema/tx" 
+	xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans  
                         http://www.springframework.org/schema/beans/spring-beans-3.1.xsd  
                         http://www.springframework.org/schema/context  
                         http://www.springframework.org/schema/context/spring-context-3.1.xsd  
                         http://www.springframework.org/schema/mvc  
-                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+                        http://www.springframework.org/schema/aop 
+                        http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+                        http://www.springframework.org/schema/tx 
+                        http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+                        ">
 	<!-- 自动扫描 -->
 	<context:component-scan base-package="com.cn.ttz" />
 	<!-- 引入配置文件 -->
@@ -17,8 +25,8 @@
 		<property name="location" value="classpath:jdbc.properties" />
 	</bean>
 
-	 <!-- 阿里 druid数据库连接池 -->
-    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">  
+	 <!-- 阿里 druid数据库连接池  主库-->
+    <bean id="dataSource1" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">  
          <!-- 数据库基本信息配置 -->
          <property name="url" value="${url}" />  
          <property name="username" value="${username}" />  
@@ -49,6 +57,55 @@
          <!-- 关闭abanded连接时输出错误日志 -->   
          <property name="logAbandoned" value="${logAbandoned}" />
     </bean>
+    
+    
+    <!-- 阿里 druid数据库连接池  从库 -->
+    <bean id="dataSource2" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">  
+         <!-- 数据库基本信息配置 -->
+         <property name="url" value="${url2}" />  
+         <property name="username" value="${username2}" />  
+         <property name="password" value="${password2}" />  
+         <property name="driverClassName" value="${driverClassName2}" />  
+         <property name="filters" value="${filters2}" />  
+         <!-- 最大并发连接数 -->
+         <property name="maxActive" value="${maxActive2}" />
+         <!-- 初始化连接数量 -->
+         <property name="initialSize" value="${initialSize2}" />
+         <!-- 配置获取连接等待超时的时间 -->
+         <property name="maxWait" value="${maxWait2}" />
+         <!-- 最小空闲连接数 -->
+         <property name="minIdle" value="${minIdle2}" />  
+         <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+         <property name="timeBetweenEvictionRunsMillis" value="${timeBetweenEvictionRunsMillis2}" />
+         <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+         <property name="minEvictableIdleTimeMillis" value="${minEvictableIdleTimeMillis2}" />  
+         <property name="validationQuery" value="${validationQuery2}" />  
+         <property name="testWhileIdle" value="${testWhileIdle2}" />  
+         <property name="testOnBorrow" value="${testOnBorrow2}" />  
+         <property name="testOnReturn" value="${testOnReturn2}" />  
+         <property name="maxOpenPreparedStatements" value="${maxOpenPreparedStatements2}" />
+         <!-- 打开removeAbandoned功能 -->
+         <property name="removeAbandoned" value="${removeAbandoned2}" />
+         <!-- 1800秒，也就是30分钟 -->
+         <property name="removeAbandonedTimeout" value="${removeAbandonedTimeout2}" />
+         <!-- 关闭abanded连接时输出错误日志 -->   
+         <property name="logAbandoned" value="${logAbandoned2}" />
+    </bean>
+    
+    
+    <!-- 编写spring 配置文件的配置多数源映射关系 -->
+	<bean class="util.datasources.DynamicDataSource" id="dataSource">
+		<property name="targetDataSources">
+			<map key-type="java.lang.String">
+				<entry value-ref="dataSource1" key="dataSource1" />
+				<entry value-ref="dataSource2" key="dataSource2" />
+			</map>
+		</property>
+		<property name="defaultTargetDataSource" ref="dataSource1">
+		</property>
+	</bean>
+    
+    
 
 	<!-- spring和MyBatis完美整合，不需要mybatis的配置映射文件 -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -68,5 +125,37 @@
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
+	
+	
+	<!-- 数据源前置增强 -->
+	<bean id="dataSourceAspect" class="util.datasources.DataSourceAspect" />
+
+	
+	<aop:config>
+		<aop:pointcut id="appService"
+			expression="execution(public * com.cn.ttz.service.impl..*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="appService"
+			order="2" />
+		<aop:advisor advice-ref="dataSourceAspect" pointcut-ref="appService"
+			order="1" />
+	</aop:config>
+
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="select*" read-only="true" />
+			<tx:method name="find*" read-only="true" />
+			<tx:method name="get*" read-only="true" />
+			<tx:method name="*" />
+		</tx:attributes>
+	</tx:advice>
+	
+	
+	
+	
+	<!-- aop注解支持 -->
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+	
+	
+
 
 </beans>

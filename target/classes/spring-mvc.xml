@@ -222,6 +222,8 @@
 	          <ref bean="taskTrigger7" /> 
 	         -->
 	        </list>
+	        
+	         
 	    </property>
 	    <property name="taskExecutor" ref="executor" />
 	</bean>

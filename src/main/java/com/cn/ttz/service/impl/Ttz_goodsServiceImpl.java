@@ -14,29 +14,41 @@ import com.cn.ttz.dao.Ttz_tuantuanDao;
 import com.cn.ttz.pojo.Jihes_goods;
 import com.cn.ttz.pojo.Ttz_goods;
 import com.cn.ttz.service.Ttz_goodsService;
+
+import util.datasources.DataSource;
+import util.datasources.DataSourceContextHolder;
 @Service("Ttz_GoodsService")
 public class Ttz_goodsServiceImpl implements Ttz_goodsService{
 	@Resource
 	private Ttz_goodsDao ttz_goodsDao;
 	@Resource
 	private Ttz_tuantuanDao ttz_tuantuanDao;
+	@Override
+	@DataSource(DataSourceContextHolder.DATA_SOURCE_B)
 	public List<Jihes_goods> selectPage(Map<String, Integer> map) {
 		return ttz_goodsDao.selectPage(map);
 	}
 	@Resource
 	private Ttz_bill_ordersDao ttz_bill_ordersDao;
+	@Override
+	@DataSource(DataSourceContextHolder.DATA_SOURCE_B)
 	public int selectByGoodId(Map<String,Object> map) {
 		return ttz_bill_ordersDao.selectByGoodId(map);
 	}
 	@Resource
 	private Ttz_ordersDao ttz_ordersDao;
+	@Override
+	@DataSource(DataSourceContextHolder.DATA_SOURCE_B)
 	public int selectTuanNum(Map<String, Object> map) {
 		return ttz_ordersDao.selectTuanNum(map);
 	}
+	@Override
+	@DataSource(DataSourceContextHolder.DATA_SOURCE_B)
 	public List<Ttz_goods> selectTtzGoodsId(Map<String, Object> map) {
 		return ttz_goodsDao.selectTtzGoodsId(map);
 	}
 	@Override
+	@DataSource(DataSourceContextHolder.DATA_SOURCE_A)
 	public int updateExpireTuanStatus(Map<String, Object> map) {
 		return ttz_tuantuanDao.updateExpireTuanStatus(map);
 	}

@@ -731,15 +731,18 @@ public class TtzBillOderController {
    	 */
    	public  void unFreeze(HttpServletRequest request,HttpServletResponse response){
     	//根绝cookie获取request方法
-		int user_id = CookieUtil.getUserId(request, response);
-		if(user_id == -1 || user_id<0) {
-			responseWriteInfo(401, "未登录", null, response);
-			return;
-		}
-    	//int user_id =8587;
+//		int user_id = CookieUtil.getUserId(request, response);
+//		if(user_id == -1 || user_id<0) {
+//			responseWriteInfo(401, "未登录", null, response);
+//			return;
+//		}
+    	int user_id =7625;
     	
     	List<Ttz_unfreeze> ttz_unfreezes = new ArrayList<Ttz_unfreeze>();
     	BigDecimal allAmount = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
+    	BigDecimal allAmount2 = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
+    	BigDecimal allAmount3 = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
+    	BigDecimal allAmount4 = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
     	BigDecimal totalAmount = new BigDecimal("0.00");
     	BigDecimal totalAmount2 = new BigDecimal("0.00");
     	BigDecimal totalAmount3 = new BigDecimal("0.00");
@@ -824,6 +827,9 @@ public class TtzBillOderController {
 			totalAmount4 = totalAmount4.add(Rand(info.getAmount(), nowRate));
 			info.setAmount(totalAmount);
 			allAmount = allAmount.add(totalAmount).setScale(2, BigDecimal.ROUND_HALF_UP);
+			allAmount2 = allAmount2.add(totalAmount2).setScale(2, BigDecimal.ROUND_HALF_UP);
+			allAmount3 = allAmount3.add(totalAmount3).setScale(2, BigDecimal.ROUND_HALF_UP);
+			allAmount4 = allAmount4.add(totalAmount4).setScale(2, BigDecimal.ROUND_HALF_UP);
 			ttz_unfreezes.add(info);
 			
 			} catch (ParseException e) {
@@ -882,6 +888,9 @@ public class TtzBillOderController {
 				totalAmount4 = totalAmount4.add(Rand(info.getAmount(), nowRate));
 				info.setAmount(totalAmount);
 				allAmount = allAmount.add(totalAmount).setScale(2, BigDecimal.ROUND_HALF_UP);
+				allAmount2 = allAmount2.add(totalAmount2).setScale(2, BigDecimal.ROUND_HALF_UP);
+				allAmount3 = allAmount3.add(totalAmount3).setScale(2, BigDecimal.ROUND_HALF_UP);
+				allAmount4 = allAmount4.add(totalAmount4).setScale(2, BigDecimal.ROUND_HALF_UP);
 				ttz_unfreezes.add(info);
 				//xx
 //				if(info.getRate() == rateNum) {//相等，说明本周已领
@@ -932,7 +941,7 @@ public class TtzBillOderController {
 		String sign = request.getParameter("sign") == null ? "" : request.getParameter("sign");
 		String t = request.getParameter("t") == null ? "" : request.getParameter("t");
 		
-		String api_url = "http://api.jihes.com/ttz/balance?os_type="+os_type+"&os_version="+os_version+"&app_version="+app_version+"&api_version="+api_version+"&device_name="+device_name+"&client_id="+client_id+"&sign="+sign+"&t="+t;
+		String api_url = "http://test_api.jihes.com/ttz/balance?os_type="+os_type+"&os_version="+os_version+"&app_version="+app_version+"&api_version="+api_version+"&device_name="+device_name+"&client_id="+client_id+"&sign="+sign+"&t="+t;
 
 		api_url = api_url.replace(" ", "%20");
 		
@@ -982,10 +991,10 @@ public class TtzBillOderController {
 		
 		JSONObject data = new JSONObject();
 		String[] total = new String[4];
-		total[0] = totalAmount.toString();
-		total[1] = totalAmount2.toString();
-		total[2] = totalAmount3.toString();
-		total[3] = totalAmount4.toString();
+		total[0] = allAmount.toString();
+		total[1] = allAmount2.toString();
+		total[2] = allAmount3.toString();
+		total[3] = allAmount4.toString();
 		data.put("totalAmount", total);
 		data.put("count", count);
 		data.put("reuslt", httpOrgCreateTestRtn2+",api_url:"+api_url);

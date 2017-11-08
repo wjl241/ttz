@@ -8,13 +8,18 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.cn.ttz.dao.Jihes_configDao;
-import com.cn.ttz.pojo.Jihes_config;
 import com.cn.ttz.service.ConfigService;
+
+import util.datasources.DataSource;
+import util.datasources.DataSourceContextHolder;
 
 @Service("configService")
 public class ConfigServiceImpl implements ConfigService{
 	@Resource
 	private Jihes_configDao jihes_configDao;
+	
+	@Override
+	@DataSource(DataSourceContextHolder.DATA_SOURCE_B)
 	public String selectConfig(String name,String title,String key) {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("name", name);
