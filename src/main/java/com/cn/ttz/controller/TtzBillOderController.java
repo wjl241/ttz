@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.cn.ttz.pojo.Jihes_config;
 import com.cn.ttz.pojo.Ttz_bill_orders;
 import com.cn.ttz.pojo.Ttz_unfreeze;
 import com.cn.ttz.service.ConfigService;
@@ -144,7 +145,18 @@ public class TtzBillOderController {
 		responseWriteInfo(200, path+","+path2+","+"hehe"+",info:"+info+"hehe:"+hehe, null, response);
 	}
 	
+	@RequestMapping("/test2")
+	public  void test2(HttpServletRequest request,HttpServletResponse response) {
+		boolean success = ConfigService.selectConfig2("ttz","hbdetail","hb_day");
+		if(success) {
+			responseWriteInfo(200, "缓存成功", null, response);
+		}else {
+			responseWriteInfo(200, "缓存未成功", null, response);
+		}
+		return;
 	
+		
+	}
 	  public static String test() throws IOException {  
 	        String filePath = "."+File.separator +"farParentfile" + File.separator + "parentFile"+File.separator + "test.jsp";  
 	          String info = "";
@@ -731,12 +743,12 @@ public class TtzBillOderController {
    	 */
    	public  void unFreeze(HttpServletRequest request,HttpServletResponse response){
     	//根绝cookie获取request方法
-//		int user_id = CookieUtil.getUserId(request, response);
-//		if(user_id == -1 || user_id<0) {
-//			responseWriteInfo(401, "未登录", null, response);
-//			return;
-//		}
-    	int user_id =7625;
+		int user_id = CookieUtil.getUserId(request, response);
+		if(user_id == -1 || user_id<0) {
+			responseWriteInfo(401, "未登录", null, response);
+			return;
+		}
+//    	int user_id =7625;
     	
     	List<Ttz_unfreeze> ttz_unfreezes = new ArrayList<Ttz_unfreeze>();
     	BigDecimal allAmount = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -941,7 +953,7 @@ public class TtzBillOderController {
 		String sign = request.getParameter("sign") == null ? "" : request.getParameter("sign");
 		String t = request.getParameter("t") == null ? "" : request.getParameter("t");
 		
-		String api_url = "http://test_api.jihes.com/ttz/balance?os_type="+os_type+"&os_version="+os_version+"&app_version="+app_version+"&api_version="+api_version+"&device_name="+device_name+"&client_id="+client_id+"&sign="+sign+"&t="+t;
+		String api_url = "http://api.jihes.com/ttz/balance?os_type="+os_type+"&os_version="+os_version+"&app_version="+app_version+"&api_version="+api_version+"&device_name="+device_name+"&client_id="+client_id+"&sign="+sign+"&t="+t;
 
 		api_url = api_url.replace(" ", "%20");
 		

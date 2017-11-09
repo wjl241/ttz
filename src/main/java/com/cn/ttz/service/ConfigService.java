@@ -1,5 +1,6 @@
 package com.cn.ttz.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.cn.ttz.pojo.Jihes_config;
@@ -13,4 +14,7 @@ public interface ConfigService {
 	 * @return
 	 */
 	String selectConfig(String name,String title,String key);
+	
+	
+	boolean selectConfig2(String name,String title,String key);
 }
