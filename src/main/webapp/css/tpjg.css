@@ -1,0 +1,119 @@
+.head {
+			width: 100%;
+			height: 48px;
+			background-image: url(../img/nav.png);
+		}
+		
+		.head div {
+			width: 1200px;
+			height: 48px;
+			line-height: 48px;
+			margin: 0 auto;
+		}
+		
+		.head div .head-left {
+			float: left;
+		}
+		
+		.head div .head-right {
+			float: right;
+		}
+		
+		.head div .head-right a {
+			color: #ff443a;
+			font-size: 14px;
+			text-decoration: none;
+		}
+		/*banner*/
+		
+		.banner {
+			width: 100%;
+			height: 330px;
+		}
+		
+		.banner img {
+			width: 100%;
+			height: 330px;
+		}
+		
+		.banner span {
+			position: relative;
+			top: -110px;
+			left: 19%;
+			color: #fff;
+		}
+		/*投票结果*/
+		
+		.vote {
+			width: 100%;
+			padding-top: 20px;
+		}
+		
+		.pro {
+			width: 1200px;
+			margin: 0 auto;
+		}
+		
+		.pro ul {
+			margin-top: 60px;
+		}
+		
+		.pro ul li {
+			width: 1040px;
+			overflow: hidden;
+		}
+		
+		.pro ul li span:hover {
+			cursor: pointer;
+		}
+		
+		.pro h3 {
+			font-weight: bold;
+			color: #e71b4c;
+		}
+		
+		.pro .pro-bar {
+			height: 15px;
+			margin-top: 5px;
+		}
+		
+		.pro .pro-bar .pro-left {
+			float: left;
+			margin-top: 5px;
+		}
+		
+		.pro .pro-bar .pro-right {
+			float: right;
+		}
+		
+		.pro .pro-bar .pro-right:hover {
+			cursor: pointer;
+		}
+		/*页脚*/
+		
+		.footer {
+			width: 100%;
+			height: 120px;
+			margin-top: 30px;
+		}
+		
+		.footer div {
+			width: 1200px;
+			height: 100%;
+			margin: 0 auto;
+			text-align: center;
+		}
+		
+		.footer .hr {
+			border-top: 1px solid #C0C0C0;
+			border-collapse: collapse;
+			display: inline-block;
+			width: 100%;
+			height: 5px;
+		}
+		
+		.footer .bot {
+			position: relative;
+			margin-top: 30px;
+			display: inline-block;
+		}

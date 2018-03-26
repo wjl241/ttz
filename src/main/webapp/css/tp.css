@@ -1,0 +1,259 @@
+        header {
+			width: 100%;
+			height: 48px;
+			background-image: url(../img/nav.png);
+		}
+		
+		header div {
+			width: 1200px;
+			height: 48px;
+			line-height: 48px;
+			margin: 0 auto;
+		}
+		
+		header .head-left {
+			float: left;
+		}
+		
+		header .head-right {
+			float: right;
+		}
+		
+		header .head-right a {
+			color: #ff443a;
+			font-size: 14px;
+			text-decoration: none;
+		}
+		/*banner*/
+		
+		.banner {
+			width: 100%;
+			height: 330px;
+		}
+		
+		.banner img {
+			width: 100%;
+			height: 330px;
+		}
+		
+		.banner span {
+			position: relative;
+			top: -110px;
+			left: 19%;
+			color: #fff;
+		}
+		/*投票结果*/
+		
+		.vote {
+			width: 100%;
+			padding-top: 20px;
+		}
+		
+		.pro {
+			width: 1200px;
+			margin: 0 auto;
+		}
+		
+		.rule h3 {
+			font-weight: bold;
+			color: #e71b4c;
+		}
+		
+		.rule div {
+			height: 100px;
+			line-height: 25px;
+			font-weight: bold;
+			font-size: 15px;
+			margin-top: 30px;
+		}
+		
+		.rule div span {
+			display: block;
+		}
+		
+		.rule div span:last-child {
+			height: 3px;
+			border-bottom: 1px solid #C0C0C0;
+			margin-top: 20px;
+		}
+		
+		.font {
+			margin-top: 30px;
+		}
+		
+		.font h3 {
+			font-weight: bold;
+			color: #e71b4c;
+		}
+		
+		.no1 {
+			margin-top: 30px;
+		}
+		
+		.font h5 {
+			font-size: 16px;
+		}
+		
+		.font h5:hover {
+			cursor: pointer;
+		}
+		
+		.font label {
+			font-weight: normal;
+		}
+		
+		.font label:hover {
+			cursor: pointer;
+		}
+		/*图片投票*/
+		
+		.pict {
+			margin-top: 30px;
+		}
+		
+		.pict h3 {
+			font-weight: bold;
+			color: #e71b4c;
+		}
+		
+		.pict ul,
+		.pict ul li {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+		}
+		
+		.pict ul {
+			margin-top: 30px;
+			overflow: hidden;
+		}
+		
+		.pict ul li {
+			width: 223px;
+			height: 345px;
+			float: left;
+			margin-left: 20px;
+		}
+		
+		.pict ul li:first-child {
+			margin-left: 0;
+		}
+		
+		.pict-1 {
+			width: 220px;
+			height: 277px;
+			display: inline-block;
+			background-color: #fff;
+		}
+		
+		.pict-1 img {
+			width: 220px;
+			height: 277px;
+			padding: 10px;
+		}
+		
+		.pict .poll {
+			overflow: hidden;
+			margin-top: 10px;
+			font-weight: bold;
+		}
+		
+		.pict .poll-left {
+			float: left;
+		}
+		
+		.pict .poll-right {
+			float: right;
+		}
+		
+		.pict p a {
+			text-decoration: none;
+			margin-left: 20px;
+			color: #8C8C8C;
+		}
+		
+		.pict li label:hover {
+			cursor: pointer;
+		}
+		
+		.pro .hr1 {
+			height: 5px;
+			width: 100%;
+			border-top: 1px solid #C0C0C0;
+			display: inline-block;
+		}
+		/*验证码*/
+		
+		.code {
+			width: 100%;
+			height: 260px;
+			margin-top: 50px;
+		}
+		
+		.code > div {
+			width: 1200px;
+			margin: 0 auto;
+		}
+		
+		.code label {
+			display: block;
+		}
+		
+		.code form {
+			margin-top: 30px;
+		}
+		
+		.code span {
+			width: 80px;
+			height: 32px;
+			position: absolute;
+			margin-left: 3px;
+			display: inline-block;
+			background-color: coral;
+		}
+		
+		.code input {
+			width: 260px;
+		}
+		
+		.code .butt {
+			width: 110px;
+			height: 40px;
+			text-align: center;
+			line-height: 40px;
+			color: #fff;
+			background-color: #d90135;
+			margin-top: 30px;
+		}
+		
+		.code .butt:hover {
+			cursor: pointer;
+		}
+		/*页脚*/
+		
+		footer {
+			width: 100%;
+			height: 120px;
+			margin-top: 30px;
+		}
+		
+		footer div {
+			width: 1200px;
+			height: 100%;
+			margin: 0 auto;
+			text-align: center;
+		}
+		
+		footer .hr {
+			border-top: 1px solid #C0C0C0;
+			border-collapse: collapse;
+			display: inline-block;
+			width: 100%;
+			height: 5px;
+		}
+		
+		footer .bot {
+			position: relative;
+			margin-top: 30px;
+			display: inline-block;
+		}
