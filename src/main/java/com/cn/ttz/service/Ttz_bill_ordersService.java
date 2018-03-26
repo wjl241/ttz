@@ -6,6 +6,7 @@ import java.util.Map;
 import com.cn.ttz.pojo.Jihes_sys_notification;
 import com.cn.ttz.pojo.Ttz_bill_orders;
 import com.cn.ttz.pojo.Ttz_orders;
+import com.cn.ttz.pojo.Ttz_team;
 import com.cn.ttz.pojo.Ttz_unfreeze;
 
 public interface Ttz_bill_ordersService {
@@ -161,4 +162,42 @@ public interface Ttz_bill_ordersService {
      * @return
      */
     List<Ttz_unfreeze> selectFreezeInfoNoFreeze(Map<String,Object> map);
+    
+    
+    
+    /**
+     * 获取某个活动商品的所有组队成功队伍
+     * @param map
+     * ttz_goods_id 商品活动id
+     * start_time 开始时间
+     * end_time  结束时间
+     * status   队伍状态0 开始组队 1 成功 2 红包发放 3失败
+     * @return
+     */
+    List<Ttz_team> getSuccessTeam(Map<String,Object> map);
+    
+    
+    
+    /**
+     * 根据 order_id批量修改红包未失效
+     * @param map
+     * update_time
+     * ids list   order_ids
+     * @return
+     */
+    Integer dealExpireRedPackets(Map<String,Object> map);
+    
+    /**
+     * 修改team实体
+     * @param record
+     * @return
+     */
+    int updateTeamByPrimaryKey(Ttz_team record);
+    
+    /**
+     * 获取已解冻的金额和
+     * @param map
+     * @return
+     */
+    double getYLQAmount(Map<String,Object> map);
 }

@@ -54,4 +54,10 @@ public interface Ttz_unfreezeDao {
      */
     List<Ttz_unfreeze> selectFreezeInfoNoFreeze(Map<String,Object> map);
     
+    /**
+     * 获取已解冻的金额和
+     * @param map
+     * @return
+     */
+    double getYLQAmount(Map<String,Object> map);
 }

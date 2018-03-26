@@ -235,9 +235,46 @@
 			<version>3.6</version>
 		</dependency>
 		
+		<dependency>
+			<groupId>org.apache.directory.studio</groupId>
+			<artifactId>org.apache.commons.codec</artifactId>
+			<version>1.8</version>
+		</dependency>
+		
+		<dependency>
+    <groupId>org.eclipse.ecf</groupId>
+    <artifactId>org.apache.commons.codec</artifactId>
+    <version>1.9.0.v20170208-1614</version>
+    
+   
+    
+</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/commons-logging/commons-logging -->
+<dependency>
+    <groupId>commons-logging</groupId>
+    <artifactId>commons-logging</artifactId>
+    <version>1.2</version>
+</dependency>
+
+
+	
+	<!-- https://mvnrepository.com/artifact/com.jhlabs/filters -->
+<dependency>
+    <groupId>com.jhlabs</groupId>
+    <artifactId>filters</artifactId>
+    <version>2.0.235-1</version>
+</dependency>
+
+<dependency>
+    <groupId>org.codehaus.jackson</groupId>
+    <artifactId>jackson-core-asl</artifactId>
+    <version>1.9.13</version>
+</dependency>
+
 	</dependencies>
 	
-	
+
 	
 	
 	<build>

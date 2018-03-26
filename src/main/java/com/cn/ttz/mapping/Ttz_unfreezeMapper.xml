@@ -139,7 +139,7 @@
    INNER JOIN  (SELECT SUM(rate) AS rate,receive_time  FROM ttz_unfreeze AS c  WHERE create_time > #{create_time}
     and user_id = #{user_id}   GROUP BY c.receive_time) AS b
 	ON b.receive_time = a.receive_time where
- 	 user_id =  #{user_id} AND create_time >  #{create_time} GROUP BY a.receive_time  ;
+ 	 user_id =  #{user_id} AND create_time >  #{create_time} and a.status in (2)  GROUP BY a.receive_time  ;
   </select>
   
   <!-- 对selectFreezeInfo 的补充，获取所有已领取红包的时间集合，然后过滤掉有解冻信息的情况，rate默认为0 -->
@@ -174,4 +174,10 @@
      </foreach >
   </insert>
 
+
+  <!-- 获取所有领取的金额 -->
+  <select id="getYLQAmount" resultType="java.lang.Double"  parameterType="java.util.Map" >
+  		select  if(sum(amount) is null,0,sum(amount)) from ttz_unfreeze where user_id = #{user_id} 
+  		and receive_time = #{receive_time} order by create_time;
+  </select>
 </mapper>

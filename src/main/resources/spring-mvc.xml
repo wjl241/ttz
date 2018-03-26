@@ -213,15 +213,15 @@
 	    <property name="triggers">
 	        <list>
 	        <!--  
-	          <ref bean="taskTrigger1" />
+	                 <ref bean="taskTrigger1" />
 	          <ref bean="taskTrigger2" />
 	          <ref bean="cronTrigger3" />
-	          <ref bean="cronTrigger4" />
+	         <ref bean="cronTrigger4" />
 	          <ref bean="taskTrigger5" />    
 	          <ref bean="taskTrigger6" /> 
 	          <ref bean="taskTrigger7" /> 
 	         -->
-	          <ref bean="taskTrigger1" />
+	              <ref bean="taskTrigger1" />
 	          <ref bean="taskTrigger2" />
 	          <ref bean="cronTrigger3" />
 	          <ref bean="cronTrigger4" />

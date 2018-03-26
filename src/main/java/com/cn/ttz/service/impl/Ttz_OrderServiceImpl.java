@@ -10,11 +10,13 @@ import org.springframework.stereotype.Service;
 import com.cn.ttz.dao.Jihes_userDao;
 import com.cn.ttz.dao.Ttz_goodsDao;
 import com.cn.ttz.dao.Ttz_ordersDao;
+import com.cn.ttz.dao.Ttz_teamDao;
 import com.cn.ttz.dao.Ttz_tuantuanDao;
 import com.cn.ttz.dao.Ttz_user_relationDao;
 import com.cn.ttz.pojo.Jihes_user;
 import com.cn.ttz.pojo.Ttz_goods;
 import com.cn.ttz.pojo.Ttz_orders;
+import com.cn.ttz.pojo.Ttz_team;
 import com.cn.ttz.pojo.Ttz_tuantuan;
 import com.cn.ttz.pojo.Ttz_user_relation;
 import com.cn.ttz.service.Ttz_OrderService;
@@ -34,6 +36,8 @@ public class Ttz_OrderServiceImpl implements Ttz_OrderService {
 	private Ttz_user_relationDao ttz_user_relationDao;
 	@Resource
 	private Jihes_userDao jihes_userDao;
+	@Resource
+	private Ttz_teamDao ttz_teamDao;
 	@Override
 	@DataSource(DataSourceContextHolder.DATA_SOURCE_A)
 	public int updateOrders(Map<String,Object> map) {
@@ -107,5 +111,10 @@ public class Ttz_OrderServiceImpl implements Ttz_OrderService {
 	@DataSource(DataSourceContextHolder.DATA_SOURCE_A)
 	public Integer insertNPC(List<Ttz_orders> list) {
 		return ttz_ordersDao.insertNPC(list);
+	}
+	@Override
+	@DataSource(DataSourceContextHolder.DATA_SOURCE_B)
+	public Ttz_team getFaildOrderTeam(Map<String, Object> map) {
+		return ttz_teamDao.getFaildOrderTeam(map);
 	}
 }

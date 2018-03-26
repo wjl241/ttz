@@ -4,4 +4,6 @@ encoding//src/main/resources/jdbc2.properties=UTF-8
 encoding//src/main/resources/jdbc3.properties=UTF-8
 encoding//src/main/resources/jdbcMulit.properties=UTF-8
 encoding//src/main/resources/jdbc_ZS.properties=UTF-8
+encoding//src/main/resources/jdbc_local.properties=UTF-8
+encoding//src/main/resources/jdbcbd.properties=UTF-8
 encoding//src/main/resources/log4j.properties=UTF-8

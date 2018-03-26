@@ -75,6 +75,15 @@ public interface Ttz_bill_ordersDao {
      */
     Integer selectYLQRedPacket(Integer userId);
     
+    /**
+     * 根据 order_id批量修改红包未失效
+     * @param map
+     * update_time
+     * ids list   order_ids
+     * @return
+     */
+    Integer dealExpireRedPackets(Map<String,Object> map);
+    
     
   
 }

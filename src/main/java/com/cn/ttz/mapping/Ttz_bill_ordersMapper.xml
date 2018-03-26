@@ -324,5 +324,14 @@
      
   </select>
   
+  
+    <!-- 根据 order_id批量修改红包未失效 -->
+   <update id="dealExpireRedPackets" parameterType="java.util.Map" >
+    update ttz_bill_orders set status = 4,update_time = #{update_time} 
+    where order_id in 
+    <foreach collection="order_ids" item="item" index="index" open="(" close=")" separator=",">
+       #{item}
+   </foreach>
+  </update>
  
 </mapper>

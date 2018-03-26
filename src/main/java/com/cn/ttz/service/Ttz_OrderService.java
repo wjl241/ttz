@@ -7,6 +7,7 @@ import com.cn.ttz.dao.Ttz_ordersDao;
 import com.cn.ttz.pojo.Jihes_user;
 import com.cn.ttz.pojo.Ttz_goods;
 import com.cn.ttz.pojo.Ttz_orders;
+import com.cn.ttz.pojo.Ttz_team;
 import com.cn.ttz.pojo.Ttz_tuantuan;
 import com.cn.ttz.pojo.Ttz_user_relation;
 
@@ -109,4 +110,16 @@ public interface Ttz_OrderService {
      * @return
      */
     Integer insertNPC(List<Ttz_orders> list);
+    
+    
+    /**
+     * 获取某个失效订单且状态为成功的队伍
+     * order_id ttz_order_id
+     * start_time 开始时间
+     * end_time  结束时间
+     * status   队伍状态0 开始组队 1 成功 2 红包发放 3失败
+     * @param map
+     * @return
+     */
+    Ttz_team getFaildOrderTeam(Map<String,Object> map);
 }

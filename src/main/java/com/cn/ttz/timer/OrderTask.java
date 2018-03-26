@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import com.cn.ttz.pojo.Jihes_sys_notification;
 import com.cn.ttz.pojo.Ttz_goods;
 import com.cn.ttz.pojo.Ttz_orders;
+import com.cn.ttz.pojo.Ttz_team;
 import com.cn.ttz.pojo.Ttz_tuantuan;
 import com.cn.ttz.pojo.Ttz_user_pid;
 import com.cn.ttz.service.ConfigService;
@@ -356,60 +357,25 @@ public class OrderTask {
 			}
 			
 			
+			//针对失败的订单，查询team 表，修改team状态
 			//TODO
-			for(Ttz_orders failOrder : failOrders) {
-				
-			}
-			
-			
-			//发送站内通知
-			//TODO 实效通知先 取消
-		   if(true ||userIds ==null || userIds.size()<=0) {//若没有，则不执行
-		    	
-		   }else {//有，批量插库
-		    	 List<Jihes_sys_notification> notifications = new ArrayList<Jihes_sys_notification>();
-		    	 Jihes_sys_notification notification = new Jihes_sys_notification();
-		    	 Map<String,Object> sendsMap = new HashMap<String,Object>();
-		    	 int create_time = 0;
-		    	 boolean next = false;
-		    	 for(int user_id : userIds) {
-		    		    sendsMap = new HashMap<String,Object>();
-		    		    sendsMap.put("title", "报告小主，您参与的团团赚，因为某个单子退款，相关红包就失效了哦。去查看详情");
-		    		    sendsMap.put("user_id", user_id);
-		    		    create_time = ttz_bill_ordersService.selectCreateTime(sendsMap);
-		    		    now = new Date();
-	    				calendar = Calendar.getInstance(); 
-	    				calendar.setTime(now);
-	    				calendar.add(Calendar.DAY_OF_YEAR, -1);
-	    				int t = (int) calendar.getTime().getTime();
-	    				if(t>create_time) {//昨天的信息，才发送
-	    					next = true;
-	    				}
-		    		    if(create_time == 0 || next) {
-		    		    	notification = new Jihes_sys_notification();
-				    		notification.setUserId(user_id);
-				    		notification.setTitle("报告小主，您参与的团团赚，因为某个单子退款，相关红包就失效了哦。去查看详情");
-				    		notification.setContent("");
-				    		notification.setType((byte)1);
-				    		notification.setIcon("");
-				    		notification.setStatus((byte)0);
-				    		notification.setCreateTime(Integer.valueOf(String.valueOf(System.currentTimeMillis()/1000)));
-				    		notification.setUpdateTime(Integer.valueOf(String.valueOf(System.currentTimeMillis()/1000)));
-				    		notifications.add(notification);
-		    		    }
-		    		   
-		 	     }
-		    	 if(notifications == null || notifications.size()==0) {
-		    		 
-		    	 }else {
-		    		 int count = ttz_bill_ordersService.insertNotifications(notifications);
-		    		 logger.info("批量插入通知消息："+count+"条");
-		    	 }
-		    	
-			  
-		    }
-			
-		
+//			for(Ttz_orders o : failOrders) {//针对所有失败订单进行查询
+//				map = new HashMap<String,Object>();
+//				map.put("order_id", o.getId());
+//				map.put("start_time", start.getTime()/1000);
+//				map.put("end_time", end.getTime()/1000);
+//				map.put("status", 2);
+//				//一定要找红包发放成功的
+//				Ttz_team team = ttz_OrderService.getFaildOrderTeam(map);
+//				if(team ==null) {
+//					continue;
+//				}
+//				team.setStatus((byte)3);
+//				team.setUpdateTime(Integer.valueOf(String.valueOf(System.currentTimeMillis()/1000)));
+//				success = ttz_bill_ordersService.updateTeamByPrimaryKey(team);
+//				System.err.println("修改team成功次数为："+team);
+//				
+//			}
 	   }
 	   
 	   

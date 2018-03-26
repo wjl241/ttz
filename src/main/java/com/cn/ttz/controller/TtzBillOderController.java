@@ -224,30 +224,42 @@ public class TtzBillOderController {
 		JSONArray list = new JSONArray();
 		JSONObject jb = new JSONObject(); 
 		response.setContentType("application/json;charset=utf-8"); 
-		
-
-		//根绝cookie获取request方法
-		int user_id = CookieUtil.getUserId(request, response);
-		if(user_id == -1 || user_id<0) {
-			responseWriteInfo(401, "未登录", null, response);
-			return;
+		String test_id = request.getParameter("test_id") == null ? "" : request.getParameter("test_id");
+		int user_id;
+		if(!test_id.equals("")) {
+			user_id = Integer.valueOf(test_id);
+		}else {
+			//根绝cookie获取request方法
+			user_id = CookieUtil.getUserId(request, response);
+			if(user_id == -1 || user_id<0) {
+				responseWriteInfo(401, "未登录", null, response);
+				return;
+			}
 		}
-		//int user_id = 8587;
+	
+//		int user_id = 5659;
 		
 		String hb_day = ConfigService.selectConfig("ttz","hbdetail","hb_day");
 		if(hb_day ==null || hb_day.equals("")) {
 			 hb_day = "7";
 		}
 		
+		//转换积分rate 比例 如果是1就说明还是按RMB计算，大于1则转换积分
+		String rate = ConfigService.selectConfig("ttz","hbdetail","rate");
+		if(rate ==null || rate.equals("")) {
+			rate = "1";
+		}
+		BigDecimal rateB = new BigDecimal(rate).setScale(2, BigDecimal.ROUND_HALF_UP);
+		
 		//获取最大信息
 		List<Ttz_bill_orders> maxOrders =  ttz_bill_ordersService.selectMaxAmounts();
 		if(maxOrders ==null || maxOrders.size()<=0) {//为空，就放默认数据
-			list = addList();
+			list = addList(rate);
 		}else {
 			int count = 0 ;
 			for(Ttz_bill_orders orders : maxOrders) {
 				jb = new JSONObject();
-				jb.put("sumAmount", orders.getCommission().setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+				jb.put("sumAmount", orders.getCommission().setScale(2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(rate)).toString());
 				jb.put("nickName", orders.getGoodId());
 				jb.put("userId", orders.getUserId());
 				count = ttz_bill_ordersService.getValidOrderCount(orders.getUserId());
@@ -283,6 +295,18 @@ public class TtzBillOderController {
 		double ylqAmount = ttz_bill_ordersService.selectBillOrderAmout(map);//已领取金额
 		map.put("status2", 2);//失效
 		double djdAmount = ttz_bill_ordersService.selectBillOrderAmout(map);//所有需要解冻金额
+		String ylqAmount_str = String.valueOf(ylqAmount);//返回的已领取金额
+		String djdAmount_str = String.valueOf(djdAmount);//返回的待解冻金额
+		if(!rate.equals("1")) {
+			//将获取的数据乘以倍率，转换成积分
+			BigDecimal yl = new BigDecimal(ylqAmount).setScale(2, BigDecimal.ROUND_HALF_UP);
+			BigDecimal dj = new BigDecimal(ylqAmount).setScale(2, BigDecimal.ROUND_HALF_UP);
+			ylqAmount_str = yl.multiply(rateB).setScale(0, BigDecimal.ROUND_HALF_UP).toString();
+			djdAmount_str = dj.multiply(rateB).setScale(0, BigDecimal.ROUND_HALF_UP).toString();
+		}
+		
+		
+		
 		System.err.println("领取总数："+ylqAmount);
 		map = new HashMap<String, Object>();
 		map.put("user_id", user_id);
@@ -297,9 +321,13 @@ public class TtzBillOderController {
 		}
 		
 		if(ylqAmount ==0 ) {//没有领取红包，没有待领取金额，直接返回
-			data.put("ylqAmount", String.valueOf(ylqAmount));
+			data.put("ylqAmount", String.valueOf(ylqAmount_str));
 			data.put("dlqCount", String.valueOf(dlqCount));
-			data.put("jdAmount", String.valueOf(0.00));
+			if(!rate.equals("1")) {
+				data.put("jdAmount", String.valueOf(0));
+			}else {
+				data.put("jdAmount", String.valueOf(0.00));
+			}
 			data.put("freezeDay", String.valueOf(-1));
 			data.put("list", list);
 			data.put("allDay", hb_day);//每轮总天数
@@ -313,7 +341,22 @@ public class TtzBillOderController {
 		BigDecimal a1 = new BigDecimal(djdAmount).setScale(2, BigDecimal.ROUND_HALF_UP);
 		BigDecimal a2 = new BigDecimal(txAmount).setScale(2, BigDecimal.ROUND_HALF_UP);
 		double jdAmount = a1.subtract(a2).doubleValue();//解冻金额
-		
+		if(jdAmount<=0) {//12.18临时补丁，后期修改整个逻辑
+			jdAmount = 0.00;
+			ret.put("code", 200);
+			ret.put("message", "");
+			data.put("ylqAmount", ylqAmount_str);
+			data.put("dlqCount", String.valueOf(dlqCount));
+			data.put("jdAmount", String.valueOf(jdAmount));//jdAmount   djdAmount_str
+			data.put("freezeDay", String.valueOf(-1));
+			data.put("freezeMessage", "被解冻的红包金额，可立即提现!");
+			data.put("allDay", hb_day);//每轮总天数
+			
+			data.put("list", list);
+			ret.put("data", data);
+			responseWriteInfo(ret.toJSONString(), response);
+			return;
+		}
 	
 		
 		
@@ -427,7 +470,7 @@ public class TtzBillOderController {
 				data.put("allDay", hb_day);//每轮总天数
 				
 				
-				data.put("ylqAmount", String.valueOf(ylqAmount));
+				data.put("ylqAmount", ylqAmount_str);
 				data.put("dlqCount", String.valueOf(dlqCount));
 				data.put("jdAmount", String.valueOf(jdAmount));
 				
@@ -470,7 +513,7 @@ public class TtzBillOderController {
 			Date now = new Date();
 			long l2 = now.getTime();
 			double floor;
-			DecimalFormat df = new DecimalFormat("0.00");
+			DecimalFormat df = new DecimalFormat("0.00000000");
 			int sub;
 			for(Ttz_unfreeze info : freezeInfos3) {
 				try {
@@ -479,7 +522,10 @@ public class TtzBillOderController {
 					l1 = sdf.parse(info.getReceiveTime()).getTime();
 					sub= (int) ((l2-l1)/1000);
 					floor = Math.floor(Double.valueOf(df.format((float) sub/(86400*hb_day2))));
-					//floor = Math.floor(Double.valueOf(xx/60/60/24)/hb_day2);//相差几个星期，向下取整
+					//floor = Math.floor(Double.valueOf(xx/60/60/24)/hb_day2);//相差几个星期，向下取整\
+					if(floor>7) {
+						continue;
+					}
 					int min = Math.min((int)floor, rates.length);
 					for(int i=0;i<min;i++) {
 						rateNum = rateNum +Integer.valueOf(rates[i]);
@@ -504,14 +550,16 @@ public class TtzBillOderController {
 		}
 		
 		
-		
+		if(minDay==10 && jdAmount>0) {
+			minDay =0;
+		}
 	
 		
 		ret.put("code", 200);
 		ret.put("message", "");
-		data.put("ylqAmount", String.valueOf(ylqAmount));
+		data.put("ylqAmount", ylqAmount_str);
 		data.put("dlqCount", String.valueOf(dlqCount));
-		data.put("jdAmount", String.valueOf(jdAmount));
+		data.put("jdAmount", String.valueOf(jdAmount));//jdAmount   djdAmount_str
 		data.put("freezeDay", String.valueOf(minDay));
 		if(minDay<=0) {
 			data.put("freezeMessage", "被解冻的红包金额，可立即提现!");
@@ -698,6 +746,15 @@ public class TtzBillOderController {
     		responseWriteInfo(600, "红包数量为0，无法领取", null, response);
     		return;
     	}
+    	
+    	//转换积分rate 比例 如果是1就说明还是按RMB计算，大于1则转换积分
+		String rate = ConfigService.selectConfig("ttz","hbdetail","rate");
+		if(rate ==null || rate.equals("")) {
+			rate = "1";
+		}
+		BigDecimal rateB = new BigDecimal(rate).setScale(2, BigDecimal.ROUND_HALF_UP);
+    	
+    	
     	List<Integer> orderIds = new ArrayList<Integer>();
     	BigDecimal decimal = new BigDecimal("0");
     	for(Ttz_bill_orders order : ttz_bill_orders ) {
@@ -719,15 +776,19 @@ public class TtzBillOderController {
     	
     	
     	
-    	
     
     	
     	String ylqAmount2 = new BigDecimal(ylqAmount).add(decimal).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
     	
-    	
+    	if(rate.equals("1")) {//若为1 返回金额RMB double型  否则乘倍率后返回积分，int型
+    		data.put("lqAmout", String.valueOf(decimal));//领取红包金额
+    		data.put("ylqAmount", ylqAmount2);//已领取红包金额
+    	}else {
+    		data.put("lqAmout", decimal.multiply(rateB).setScale(0, BigDecimal.ROUND_HALF_UP).toString());
+    		data.put("ylqAmount", new BigDecimal(ylqAmount2).multiply(rateB).setScale(0, BigDecimal.ROUND_HALF_UP).toString());
+    	}
 		data.put("lqAmout", String.valueOf(decimal));//领取红包金额
 		data.put("count", count);//领取红包数量
-		data.put("ylqAmount", ylqAmount2);//已领取红包金额
 		data.put("dlqCount", dlqCount);//待领取红包数量
 		responseWriteInfo(200, "", data, response);
 		return;
@@ -748,7 +809,7 @@ public class TtzBillOderController {
 			responseWriteInfo(401, "未登录", null, response);
 			return;
 		}
-//    	int user_id =7625;
+	//	int user_id =5659;
     	
     	List<Ttz_unfreeze> ttz_unfreezes = new ArrayList<Ttz_unfreeze>();
     	BigDecimal allAmount = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -775,6 +836,14 @@ public class TtzBillOderController {
 			hb_day = "5,10,10,15,20,25,15";
 		}
 		String[] rates = hb_rate.split(",");
+		
+		
+		//转换积分rate 比例 如果是1就说明还是按RMB计算，大于1则转换积分
+		String rate = ConfigService.selectConfig("ttz","hbdetail","rate");
+		if(rate ==null || rate.equals("")) {
+			rate = "1";
+		}
+		BigDecimal rateB = new BigDecimal(rate).setScale(2, BigDecimal.ROUND_HALF_UP);
 		
 		
 		Calendar calendar = Calendar.getInstance();
@@ -833,10 +902,10 @@ public class TtzBillOderController {
 			info.setRate(nowRate);
 			
 			
-			totalAmount = totalAmount.add(Rand(info.getAmount(), nowRate));
-			totalAmount2 = totalAmount2.add(Rand(info.getAmount(), nowRate));
-			totalAmount3 = totalAmount3.add(Rand(info.getAmount(), nowRate));
-			totalAmount4 = totalAmount4.add(Rand(info.getAmount(), nowRate));
+			totalAmount = Rand(info.getAmount(), nowRate);
+			totalAmount2 = Rand(info.getAmount(), nowRate);
+			totalAmount3 = Rand(info.getAmount(), nowRate);
+			totalAmount4 = Rand(info.getAmount(), nowRate);
 			info.setAmount(totalAmount);
 			allAmount = allAmount.add(totalAmount).setScale(2, BigDecimal.ROUND_HALF_UP);
 			allAmount2 = allAmount2.add(totalAmount2).setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -877,45 +946,64 @@ public class TtzBillOderController {
 				l1 = sdf.parse(info.getReceiveTime()).getTime();
 				sub= (int) ((l2-l1)/1000);
 				floor = Math.floor(Double.valueOf(df.format((float) sub/(86400*hb_day2))));
-				//floor = Math.floor(Double.valueOf(xx/60/60/24)/hb_day2);//相差几个星期，向下取整
-				for(int i=0;i<floor;i++) {
-					rateNum = rateNum +Integer.valueOf(rates[i]);
+				if(floor>=8) {//超过7周，则一次性领齐
+					Map<String,Object> sendMap = new HashMap<String,Object>();
+					sendMap.put("user_id", user_id);
+					sendMap.put("receive_time", info.getReceiveTime());
+					double ylqAmout = ttz_bill_ordersService.getYLQAmount(sendMap);
+					BigDecimal YQLAmount = new BigDecimal(ylqAmout).setScale(BigDecimal.ROUND_HALF_UP, 2);
+					if(YQLAmount.compareTo(info.getAmount())>=0) {//若金额大于需要解冻的总金额，则跳过
+						continue;
+					}else {//否则，全解冻
+						BigDecimal addAmount = info.getAmount().subtract(YQLAmount);
+						
+						info.setCreateTime(Integer.valueOf(String.valueOf(System.currentTimeMillis()/1000)));
+						info.setUpdateTime(Integer.valueOf(String.valueOf(System.currentTimeMillis()/1000)));
+						info.setStatus((byte)0);
+						info.setRate(0);
+						info.setAmount(addAmount);
+						
+//						totalAmount = totalAmount.add(addAmount);
+//						totalAmount2 = totalAmount2.add(addAmount);
+//						totalAmount3 = totalAmount3.add(addAmount);
+//						totalAmount4 = totalAmount4.add(addAmount);
+						info.setAmount(addAmount);
+						allAmount = allAmount.add(addAmount).setScale(2, BigDecimal.ROUND_HALF_UP);
+						allAmount2 = allAmount2.add(addAmount).setScale(2, BigDecimal.ROUND_HALF_UP);
+						allAmount3 = allAmount3.add(addAmount).setScale(2, BigDecimal.ROUND_HALF_UP);
+						allAmount4 = allAmount4.add(addAmount).setScale(2, BigDecimal.ROUND_HALF_UP);
+						ttz_unfreezes.add(info);
+					}
+				}else {
+					//floor = Math.floor(Double.valueOf(xx/60/60/24)/hb_day2);//相差几个星期，向下取整
+					for(int i=0;i<floor;i++) {
+						rateNum = rateNum +Integer.valueOf(rates[i]);
+					}
+					nowRate = rateNum - info.getRate();
+					if(nowRate<0) {
+						responseWriteInfo(200, "计算解冻比例异常", null, response);
+						return;
+					}else if(info.getRate() == rateNum) {//相等，说明本周已领
+						continue;
+					}
+					info.setCreateTime(Integer.valueOf(String.valueOf(System.currentTimeMillis()/1000)));
+					info.setUpdateTime(Integer.valueOf(String.valueOf(System.currentTimeMillis()/1000)));
+					info.setStatus((byte)0);
+					info.setRate(nowRate);
+					info.setAmount(Rand(info.getAmount(), nowRate));
+					
+					totalAmount = Rand(info.getAmount(), nowRate);
+					totalAmount2 = Rand(info.getAmount(), nowRate);
+					totalAmount3 = Rand(info.getAmount(), nowRate);
+					totalAmount4 = Rand(info.getAmount(), nowRate);
+					info.setAmount(totalAmount);
+					allAmount = allAmount.add(totalAmount).setScale(2, BigDecimal.ROUND_HALF_UP);
+					allAmount2 = allAmount2.add(totalAmount2).setScale(2, BigDecimal.ROUND_HALF_UP);
+					allAmount3 = allAmount3.add(totalAmount3).setScale(2, BigDecimal.ROUND_HALF_UP);
+					allAmount4 = allAmount4.add(totalAmount4).setScale(2, BigDecimal.ROUND_HALF_UP);
+					ttz_unfreezes.add(info);
 				}
-				nowRate = rateNum - info.getRate();
-				if(nowRate<0) {
-					responseWriteInfo(200, "计算解冻比例异常", null, response);
-					return;
-				}else if(info.getRate() == rateNum) {//相等，说明本周已领
-					continue;
-				}
-				info.setCreateTime(Integer.valueOf(String.valueOf(System.currentTimeMillis()/1000)));
-				info.setUpdateTime(Integer.valueOf(String.valueOf(System.currentTimeMillis()/1000)));
-				info.setStatus((byte)0);
-				info.setRate(nowRate);
-				info.setAmount(Rand(info.getAmount(), nowRate));
-				
-				totalAmount = totalAmount.add(Rand(info.getAmount(), nowRate));
-				totalAmount2 = totalAmount2.add(Rand(info.getAmount(), nowRate));
-				totalAmount3 = totalAmount3.add(Rand(info.getAmount(), nowRate));
-				totalAmount4 = totalAmount4.add(Rand(info.getAmount(), nowRate));
-				info.setAmount(totalAmount);
-				allAmount = allAmount.add(totalAmount).setScale(2, BigDecimal.ROUND_HALF_UP);
-				allAmount2 = allAmount2.add(totalAmount2).setScale(2, BigDecimal.ROUND_HALF_UP);
-				allAmount3 = allAmount3.add(totalAmount3).setScale(2, BigDecimal.ROUND_HALF_UP);
-				allAmount4 = allAmount4.add(totalAmount4).setScale(2, BigDecimal.ROUND_HALF_UP);
-				ttz_unfreezes.add(info);
-				//xx
-//				if(info.getRate() == rateNum) {//相等，说明本周已领
-//					double a =Math.ceil((1-calculateProfit(Double.valueOf(df.format((float) sub/(86400*hb_day2)))))*hb_day2);
-//					day =(int) a;
-//				}else {//说明本周或前几周未领
-//					minDay = 0;
-//					rateNum - info.getRate()
-//					break;
-//				}
-//				if(day<minDay) {
-//					minDay = day;
-//				}
+			
 				
 			} catch (ParseException e) {
 				responseWriteInfo(600, "ParseException Exc:"+e.getMessage(), null, response);
@@ -942,6 +1030,10 @@ public class TtzBillOderController {
 		createMap.put("user_id", String.valueOf(user_id));
 		createMap.put("type", String.valueOf(12));
 		createMap.put("balance", allAmount.toString());
+		if(!rate.equals("1")) {
+			createMap.put("balance", allAmount.multiply(rateB).setScale(0, BigDecimal.ROUND_HALF_UP).toString());
+		}
+		createMap.put("rate", rate);
 		
 		
 		String os_type = request.getParameter("os_type") == null ? "" : request.getParameter("os_type");
@@ -977,7 +1069,7 @@ public class TtzBillOderController {
 				code = (Integer) jb.get("code");
 				message =  jb.get("message") == null ? "" : (String) jb.get("message");
 				if(code == 600) {//回滚数据
-					insert =false;
+ 					insert =false;
 				}
 			}
 		}
@@ -1007,9 +1099,16 @@ public class TtzBillOderController {
 		total[1] = allAmount2.toString();
 		total[2] = allAmount3.toString();
 		total[3] = allAmount4.toString();
+		if(!rate.equals("1")) {//按比例放大取整
+			total[0]  =  allAmount.multiply(rateB).setScale(0, BigDecimal.ROUND_HALF_UP).toString();
+			total[1]  =  allAmount2.multiply(rateB).setScale(0, BigDecimal.ROUND_HALF_UP).toString();
+			total[2]  =  allAmount3.multiply(rateB).setScale(0, BigDecimal.ROUND_HALF_UP).toString();
+			total[3]  =  allAmount4.multiply(rateB).setScale(0, BigDecimal.ROUND_HALF_UP).toString();
+		}
+		
 		data.put("totalAmount", total);
 		data.put("count", count);
-		data.put("reuslt", httpOrgCreateTestRtn2+",api_url:"+api_url);
+	//	data.put("reuslt", httpOrgCreateTestRtn2+",api_url:"+api_url);
 		
 		
 		if(code == 200) {
@@ -1046,6 +1145,9 @@ public class TtzBillOderController {
 	 * @return
 	 */
 	public static BigDecimal Rand(BigDecimal amount,int rate) {
+		if(rate >= 100) {
+			return amount;
+		}
 		amount = amount.multiply(new BigDecimal("100"));
 		int min = 0;
 		int max = amount.intValue();
@@ -1069,34 +1171,50 @@ public class TtzBillOderController {
 	 * 造假数据
 	 * @return
 	 */
-	public static JSONArray addList(){
+	public static JSONArray addList(String rate){
 		JSONArray list = new JSONArray();
 		JSONObject jb = new JSONObject();
-		jb.put("sumAmount", 143.7D);
+		if(rate.equals("1")) 
+			jb.put("sumAmount", 143.7D);
+		else 
+			jb.put("sumAmount", 14370);
 		jb.put("nickName", "150****4305");
 		jb.put("userId", -1);
 		jb.put("number", 17);
 		list.add(jb);
 		jb = new JSONObject();
-		jb.put("sumAmount", 113.4D);
+		
+		if(rate.equals("1")) 
+			jb.put("sumAmount", 113.4D);
+		else 
+			jb.put("sumAmount", 11340);
 		jb.put("nickName", "小小强把");
 		jb.put("userId", -1);
 		jb.put("number", 16);
 		list.add(jb);
 		jb = new JSONObject();
-		jb.put("sumAmount", 104.6D);
+		if(rate.equals("1")) 
+			jb.put("sumAmount", 104.6D);
+		else 
+			jb.put("sumAmount", 10460);
 		jb.put("nickName", "186****3289");
 		jb.put("userId", -1);
 		jb.put("number", 16);
 		list.add(jb);
 		jb = new JSONObject();
-		jb.put("sumAmount", 103.1D);
+		if(rate.equals("1")) 
+			jb.put("sumAmount", 103.1D);
+		else 
+			jb.put("sumAmount", 10310);
 		jb.put("nickName", "tb_7133200");
 		jb.put("userId", -1);
 		jb.put("number", 15);
 		list.add(jb);
 		jb = new JSONObject();
-		jb.put("sumAmount", 98.3D);
+		if(rate.equals("1")) 
+			jb.put("sumAmount", 98.3D);
+		else 
+			jb.put("sumAmount", 9830);
 		jb.put("nickName", "赖头浩");
 		jb.put("userId", -1);
 		jb.put("number", 14);

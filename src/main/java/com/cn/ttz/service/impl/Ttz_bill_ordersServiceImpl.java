@@ -10,11 +10,13 @@ import org.springframework.stereotype.Service;
 import com.cn.ttz.dao.Jihes_sys_notificationDao;
 import com.cn.ttz.dao.Ttz_bill_ordersDao;
 import com.cn.ttz.dao.Ttz_ordersDao;
+import com.cn.ttz.dao.Ttz_teamDao;
 import com.cn.ttz.dao.Ttz_tuantuanDao;
 import com.cn.ttz.dao.Ttz_unfreezeDao;
 import com.cn.ttz.pojo.Jihes_sys_notification;
 import com.cn.ttz.pojo.Ttz_bill_orders;
 import com.cn.ttz.pojo.Ttz_orders;
+import com.cn.ttz.pojo.Ttz_team;
 import com.cn.ttz.pojo.Ttz_tuantuan;
 import com.cn.ttz.pojo.Ttz_unfreeze;
 import com.cn.ttz.service.Ttz_bill_ordersService;
@@ -36,6 +38,9 @@ public class Ttz_bill_ordersServiceImpl implements Ttz_bill_ordersService{
 	private Jihes_sys_notificationDao jihes_sys_notificationDao;
 	@Resource
 	private Ttz_ordersDao ttz_ordersDao;
+	
+	@Resource
+	private Ttz_teamDao ttz_teamDao;
 	
 	//存在领取红包后读从库数据未刷新的情况，所以查询改为主库
 	@Override
@@ -148,5 +153,25 @@ public class Ttz_bill_ordersServiceImpl implements Ttz_bill_ordersService{
 	@DataSource(DataSourceContextHolder.DATA_SOURCE_A)
 	public List<Ttz_unfreeze> selectFreezeInfoNoFreeze(Map<String, Object> map) {
 		return ttz_unfreezeDao.selectFreezeInfoNoFreeze(map);
+	}
+	@Override
+	@DataSource(DataSourceContextHolder.DATA_SOURCE_B)
+	public List<Ttz_team> getSuccessTeam(Map<String, Object> map) {
+		return ttz_teamDao.getSuccessTeam(map);
+	}
+	@Override
+	@DataSource(DataSourceContextHolder.DATA_SOURCE_A)
+	public Integer dealExpireRedPackets(Map<String, Object> map) {
+		return ttz_bill_ordersDao.dealExpireRedPackets(map);
+	}
+	@Override
+	@DataSource(DataSourceContextHolder.DATA_SOURCE_A)
+	public int updateTeamByPrimaryKey(Ttz_team record) {
+		return ttz_teamDao.updateByPrimaryKey(record);
+	}
+	@Override
+	@DataSource(DataSourceContextHolder.DATA_SOURCE_B)
+	public double getYLQAmount(Map<String, Object> map) {
+		return ttz_unfreezeDao.getYLQAmount(map);
 	}
 }
