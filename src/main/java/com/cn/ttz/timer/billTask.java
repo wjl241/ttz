@@ -444,6 +444,9 @@ public class billTask {
 		List<Ttz_orders> payOrders = new ArrayList<Ttz_orders>();//成功付款的订单
 		List<Ttz_orders> badOrders = new ArrayList<Ttz_orders>();//成功付款的订单
 		for(Ttz_orders o : orders) {
+			if(o.getOrderStatus() == null) {
+				continue;
+			}
 			if(o.getOrderStatus() == 3 || o.getOrderStatus() == 12) {
 				payOrders.add(o);
 			}

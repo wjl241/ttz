@@ -1,5 +1,6 @@
 package com.cn.ttz.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -173,5 +174,14 @@ public class Ttz_bill_ordersServiceImpl implements Ttz_bill_ordersService{
 	@DataSource(DataSourceContextHolder.DATA_SOURCE_B)
 	public double getYLQAmount(Map<String, Object> map) {
 		return ttz_unfreezeDao.getYLQAmount(map);
+	}
+	@Override
+	public int clearReadPacket(Map<String, Object> map) {
+		int user_id = (int) map.get("user_id");
+		int count1 =0;
+		int count2 = 0;
+		count1 = ttz_bill_ordersDao.clearRedPacket(map);
+		count2 = ttz_unfreezeDao.clearReadPacket(user_id);
+		return count1+count2;
 	}
 }

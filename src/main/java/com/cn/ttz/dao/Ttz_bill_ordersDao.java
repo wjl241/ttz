@@ -84,6 +84,11 @@ public interface Ttz_bill_ordersDao {
      */
     Integer dealExpireRedPackets(Map<String,Object> map);
     
-    
+    /**
+     * 清除红包信息
+     * @param map
+     * @return
+     */
+    int clearRedPacket(Map<String,Object> map);
   
 }

@@ -180,4 +180,10 @@
   		select  if(sum(amount) is null,0,sum(amount)) from ttz_unfreeze where user_id = #{user_id} 
   		and receive_time = #{receive_time} order by create_time;
   </select>
+  
+  <!--  清除解冻信息-->
+   <delete id="clearReadPacket" parameterType="java.lang.Integer" >
+    delete from ttz_unfreeze
+    where user_id = #{user_id,jdbcType=INTEGER}
+  </delete>
 </mapper>

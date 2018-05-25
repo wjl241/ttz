@@ -302,7 +302,7 @@
     select user_id 
     from ttz_bill_orders
     where  status = 1 
-    and expire_time &lt; #{expire_time}   group by user_id
+    and expire_time &gt; #{expire_time}   group by user_id
   </select>
   
   
@@ -332,6 +332,14 @@
     <foreach collection="order_ids" item="item" index="index" open="(" close=")" separator=",">
        #{item}
    </foreach>
+  </update>
+  
+  
+  
+   <!-- 清除团团赚红包 -->
+   <update id="clearRedPacket" parameterType="java.util.Map" >
+    update ttz_bill_orders set status = 1,update_time = #{update_time} 
+    where user_id = #{user_id}
   </update>
  
 </mapper>

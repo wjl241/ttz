@@ -7,6 +7,7 @@ import com.cn.ttz.pojo.Ttz_unfreeze;
 
 public interface Ttz_unfreezeDao {
     int deleteByPrimaryKey(Integer id);
+    
 
     int insert(Ttz_unfreeze record);
 
@@ -60,4 +61,11 @@ public interface Ttz_unfreezeDao {
      * @return
      */
     double getYLQAmount(Map<String,Object> map);
+    
+    /**
+     * 清除解冻信息
+     * @param user_id
+     * @return
+     */
+    int clearReadPacket(Integer user_id);
 }

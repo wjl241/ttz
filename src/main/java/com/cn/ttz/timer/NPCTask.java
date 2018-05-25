@@ -115,7 +115,7 @@ public class NPCTask {
 			    		valueCount = valueMap.get(order.getTtzGoodsId());
 			    		//可能会存在新增的订单，所有npcmap对应值未null
 			    		NPCCount = NPCMap.get(order.getTtzGoodsId()) == null? 0: NPCMap.get(order.getTtzGoodsId());
-			    		if(valueCount*retrys >=NPCCount) {//若每个有效订单数还没执行到5次，就继续
+			    		if(valueCount*retrys >NPCCount) {//若每个有效订单数还没执行到5次，就继续
 			    			validOrders2.add(order);
 			    		}
 			    	}

@@ -203,6 +203,13 @@
 	</bean>
 	
 	
+		<!-- 该调度表示，延迟10秒启动，然后每隔1分钟执行一次。 -->
+	<bean id="taskTrigger42" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+	    <property name="jobDetail" ref="jobDetail4" />
+	    <property name="startDelay" value="1000" />
+	    <property name="repeatInterval" value="300000" />
+	</bean>
+	
 	
 	
 	
@@ -221,13 +228,6 @@
 	          <ref bean="taskTrigger6" /> 
 	          <ref bean="taskTrigger7" /> 
 	         -->
-	              <ref bean="taskTrigger1" />
-	          <ref bean="taskTrigger2" />
-	          <ref bean="cronTrigger3" />
-	          <ref bean="cronTrigger4" />
-	          <ref bean="taskTrigger5" />    
-	          <ref bean="taskTrigger6" /> 
-	          <ref bean="taskTrigger7" /> 
 	        </list>
 	        
 	         

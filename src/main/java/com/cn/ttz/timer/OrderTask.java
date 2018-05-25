@@ -66,6 +66,7 @@ public class OrderTask {
 			//String path = "/usr/local/tomcat_test/webapps/ttz/WEB-INF/orders.xls";
 			String path = "/usr/local/tomcat_test/webapps/ttz/WEB-INF/orders_zs.xls";
 			path = path.replace("//", "/");
+//		   	String path = "D:\\orders.xls";
 			Date now = new Date();
 			Date tomorrow = new Date();
 			Calendar calendar = Calendar.getInstance(); 
@@ -80,6 +81,7 @@ public class OrderTask {
 			//TODO 存到配置表中，获取
 			//String cookie = "MDAwMDAwMDAwMH-LttCDoqZhsaO6r5DMjrCMpZBqv6B4r35lvKmLh4vbf67HmYKMvmaxgKZ1";
 			String cookie = ConfigService.selectConfig("ttz","member_id","member_id");//cookie
+			logger.error("cookie:"+cookie);
 			if(cookie ==null || cookie.equals("")) {
 				cookie = "MDAwMDAwMDAwMH-LttCDoqZhsaO6r5DMjrCMpZBqv6B4r35lvKmLh4vbf67HmYKMvmaxgKZ1";
 			}
@@ -282,6 +284,7 @@ public class OrderTask {
 				success = ttz_OrderService.updateOrders(sendMap);//批量更新ttz_orders表
 			}
 			System.err.println("更新次数orders"+success);
+			logger.error("更新次数orders"+success);
 			
 			
 			
@@ -353,6 +356,7 @@ public class OrderTask {
 				int count = ttz_OrderService.updateByPrimaryKeySelective(tuantuan);
 				
 				System.err.println("更新团团次数"+count);
+				logger.error("更新团团次数"+count);
 				//list.add(tuantuan);
 			}
 			

@@ -200,4 +200,11 @@ public interface Ttz_bill_ordersService {
      * @return
      */
     double getYLQAmount(Map<String,Object> map);
+    
+    /**
+     * 清除红包信息
+     * @param map
+     * @return
+     */
+    int  clearReadPacket(Map<String,Object> map);
 }
